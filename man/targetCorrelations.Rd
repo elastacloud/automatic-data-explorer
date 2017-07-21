@@ -7,8 +7,20 @@
 targetCorrelations(df, target, use = "everything", method = c("pearson",
   "kendall", "spearman"))
 }
+\arguments{
+\item{df}{Dataframe containing all variables}
+
+\item{target}{String giving the name of the target variable}
+
+\item{use}{Same as \code{use} in the \code{cor} function}
+
+\item{method}{Same as \code{method} in the \code{cor} function}
+}
+\value{
+Named vector of the correlations, ordered by absolute highest to lowest.
+}
 \description{
 This function will return the correlation between a specfied target
-variable and all other variables in the same data frame. Uses base R \code{cor}
+variable and all other variables in the same data frame. Uses \code{cor}
 to calculate correlations.
 }

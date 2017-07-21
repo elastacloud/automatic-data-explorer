@@ -1,5 +1,5 @@
 
-context("Test the taget correlation function")
+context("Test the target correlation function")
 
 test_that("Test the target correlation function returns correct object",{
 

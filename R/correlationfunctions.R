@@ -3,6 +3,11 @@
 #' @description This function will return the correlation between a specfied target
 #' variable and all other variables in the same data frame. Uses \code{cor}
 #' to calculate correlations.
+#' @param df Dataframe containing all variables
+#' @param target String giving the name of the target variable
+#' @param use Same as \code{use} in the \code{cor} function
+#' @param method Same as \code{method} in the \code{cor} function
+#' @return Named vector of the correlations, ordered by absolute highest to lowest.
 
 targetCorrelations <- function(df, target,
                                use = "everything",
