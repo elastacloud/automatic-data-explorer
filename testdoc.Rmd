@@ -1,0 +1,52 @@
+---
+title: "testDoc"
+author: "Andrew Booth"
+date: "21 July 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load}
+library(AutoExploreR)
+library(ggplot2)
+
+```
+
+```{r data}
+testdata <- data.frame(A = rnorm(50,0,1),
+                         B = runif(50,10,20),
+                         C = seq(1,50,1))
+
+getVar <- "A"
+```
+
+
+## Analysis of variable `r getVar`
+
+### Correlations
+
+```{r}
+AutoExploreR::targetCorrelations(testdata, getVar)
+```
+
+## Visualisations
+
+An interactive histogram and static density estimate plots have been 
+generated for variable `r getVar`.
+
+### Interactive histogram plot
+
+```{r message=FALSE}
+AutoExploreR::gghistogram(testdata, getVar, interactiveplot = TRUE)
+```
+
+### Static density plot
+
+```{r message=FALSE}
+AutoExploreR::ggdensity(testdata, getVar, interactiveplot = FALSE)
+```
+
+
