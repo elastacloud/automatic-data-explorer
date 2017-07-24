@@ -1,7 +1,7 @@
 
 context("Test the target correlation function")
 
-test_that("Test the target correlation function returns correct object",{
+test_that("Test the target correlation function behaves correctly",{
 
   set.seed(12)
 
@@ -12,6 +12,10 @@ test_that("Test the target correlation function returns correct object",{
 
 
   expect_error(targetCorrelations(testdata, "D"))
+
+  expect_warning(targetCorrelations(testdata, "A", N = 10))
+
+  expect_that(length(targetCorrelations(testdata, "B", N = 1)), equals(1))
 
   corrs <- targetCorrelations(testdata, "A")
 
