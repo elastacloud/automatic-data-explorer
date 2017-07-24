@@ -13,9 +13,16 @@ targetCorrelations <- function(df, target,
                                use = "everything",
                                method = c("pearson", "kendall", "spearman")) {
 
-  varnames <- colnames(df)[colnames(df) != target] # Get column names that are not the 'target'
+  # catch non-numeric `target` error
+  if (!is.numeric(df[[target]])) {
+    stop("`target` should be a numeric vector", call. = FALSE)
+  }
 
   # purrr provides type consistent functions similar to the apply family of functions
+  df <- df[purrr::map_lgl(df, is.numeric)]  # Ignore non-numeric columns
+
+  varnames <- colnames(df)[colnames(df) != target]  # Get column names that are not the 'target'
+
   corrs <- purrr::map_dbl(df[varnames], ~ cor(., df[target], method = method, use = use))
 
   corrs[order(abs(corrs), decreasing = TRUE)]  # Return ordered correlations

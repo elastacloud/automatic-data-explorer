@@ -7,11 +7,13 @@ test_that("Test the target correlation function returns correct object",{
 
   testdata <- data.frame(A = rnorm(50,0,1),
                          B = runif(50,10,20),
-                         C = seq(1,50,1))
+                         C = seq(1,50,1),
+                         D = rep(LETTERS[1:5], 10))
+
+
+  expect_error(targetCorrelations(testdata, "D"))
 
   corrs <- targetCorrelations(testdata, "A")
-
-
 
   expect_that(length(corrs), equals(2))
 
