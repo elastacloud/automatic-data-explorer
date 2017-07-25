@@ -5,7 +5,8 @@
 \title{Calculate correlations between numeric variables}
 \usage{
 multivariateCorrelation(df, dropnotnumeric = TRUE, output = "ranked",
-  use = "everything", method = c("pearson", "kendall", "spearman"))
+  N = NULL, use = "everything", method = c("pearson", "kendall",
+  "spearman"))
 }
 \arguments{
 \item{df}{Dataframe containing all variables.}
@@ -15,6 +16,9 @@ from the dataframe.}
 
 \item{output}{Determines which output type to return. One of \code{ranked} for ranked correlation
 pairs or \code{matrix} for the correlation matrix.}
+
+\item{N}{Only used when \code{output = "ranked"}. Default \code{NULL} will return all variable pair
+correlations. Change to e.g. \code{N = 5} to return only the 5 highest absolute correlations}
 
 \item{use}{Same as \code{use} in the \code{cor} function.}
 
