@@ -1,13 +1,23 @@
 Package: AutoExploreR
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Automatic Data Exploration
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Date: 2017-07-17
+Authors@R: c(
+    person("Andrew", "Booth", email = "andrew@elastacloud.com", role = "aut"),
+    person("Darshna", "Shah", email = "darshna@elastacloud.com", role = "aut"),
+    person("Laura", "da Silva", email = "laura@elastacloud.com", role = "aut"),
+    person("Richard", "Conway", email = "richard@elastacloud.com", role = c("aut","cre"))
+    )
+Description: This package will automatically generate a 'Data Exploration Report' which will 
+    have separate sections presenting the findings (e.g. data structure section, univariate 
+    section, multivariate section, 'cleanliness' report). Presentation is very important to us, 
+    so readability and quality of visualisations within the report will be paramount. 
+URL: https://github.com/elastacloud/automatic-data-explorer
+BugReports: https://github.com/elastacloud/automatic-data-explorer/issues
+License: MIT + file LICENSE
 Encoding: UTF-8
+Depends: R (>= 3.1.2)
 LazyData: true
 Suggests: testthat
 RoxygenNote: 6.0.1
