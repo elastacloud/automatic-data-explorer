@@ -11,11 +11,11 @@ ggdensity(df, target, interactiveplot = FALSE)
 
 \item{target}{String giving the name of the target variable}
 
-\item{interactiveplot}{If \code{FALSE}, the default, returns a ggplot2
+\item{interactiveplot}{If \code{FALSE}, the default, returns a ggplot
 visualisation of the density estimate of the target variable. If
 \code{TRUE}, returns a interactive plotly visualisation of the histogram.}
 }
 \description{
-Generates either a static ggplot2 or interactive plotly
+Generates either a static ggplot or interactive plotly
 density estimate visualisation of the chosen target variable.
 }
