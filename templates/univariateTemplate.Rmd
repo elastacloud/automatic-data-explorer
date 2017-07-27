@@ -1,0 +1,27 @@
+---
+title: Test
+author: Andrew
+date: "27/07/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries, echo=FALSE, results='hide',message=FALSE}
+libraries <- c("AutoExploreR", "ggplot2", "plotly")
+sapply(libraries, function(x) library(x, character.only = TRUE))
+```
+
+```{r getvariable}
+currvar <- 'variableName'
+```
+
+# Univariate analysis of `r currvar`
+
+## Correlations
+
+```{r correlations}
+targetCorrelations(dataName, target = currvar)
+```
