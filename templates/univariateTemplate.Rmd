@@ -25,3 +25,12 @@ currvar <- 'variableName'
 ```{r correlations}
 targetCorrelations(dataName, target = currvar)
 ```
+
+## Histograme
+```{r Histogram}
+gghistogram(df = dataName, target = currvar, interactiveplot = TRUE)
+```
+
+## Density
+```{r Density}
+ggdensity(df = dataName, target = currvar, interactiveplot = TRUE)
