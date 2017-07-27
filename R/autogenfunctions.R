@@ -21,12 +21,31 @@ createDocument <- function(df, target, template, reporttitle, reportauthor,
                          documentname, documentwd,
                          writedoc = TRUE) {
 
-  ## TODO {Andrew} Allow use of NSE for df and target. Add more templates. Add options for different
+  ## TODO {Andrew} Add more templates. Add options for different
   ## outputs (i.e. pdf, word etc.). Option to decide plots interactive. Error handling. File copying etc.
+
+  # Non standard evaluation of input df and target names allowing interactive use
+
+  ### ## NEED TO CHECK ALL THIS FOR POTENTIAL ERRORS
+
+  target <- substitute(target)
+  dfname <- deparse(substitute(df))  # Create character from name of input dataframe
+
+  if(is.symbol(target)) {
+    target <- deparse(target)
+  }
+
+  ###
 
   if(!template %in% c("univariate")) {
     stop(template," not recognised template type", call. = FALSE)
   }
+
+  if(!dir.exists(documentwd)) {
+    stop("Directory '", documentwd , "' not found, please choose another", call. = FALSE)
+  }
+
+
 
   if(template == "univariate") {
 
@@ -34,7 +53,7 @@ createDocument <- function(df, target, template, reporttitle, reportauthor,
 
   }
 
-  intemplate <- edittemplate(template = intemplate, df = df, target = target,
+  intemplate <- edittemplate(template = intemplate, df = dfname, target = target,
                              reporttitle = reporttitle,
                              reportauthor = reportauthor)
 
