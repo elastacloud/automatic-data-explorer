@@ -69,7 +69,7 @@ createDocument <- function(df, target, template, reporttitle, reportauthor,
 
 writedocument <- function(editedtemplate, name, wd) {
 
-  outlocation <- paste(wd, name, sep = "")
+  outlocation <- file.path(wd, name)    #paste(wd, name, sep = "")
   writeLines(text = editedtemplate, con = outlocation)
   rmarkdown::render(outlocation)
 
