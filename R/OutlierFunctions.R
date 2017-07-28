@@ -1,9 +1,10 @@
 
 
 #'Outlier detection for numerical variables
-#'@description This function will return a data frame with the mild and extreme outliers if outliers are present
+#'@description This function will return a list of 4 objects (1: a data frame with mild outliers and their indexes, 2: a data frame with extreme outliers and their indexes, 3: a vector with mild outlier thresholds, 4: a vector with extreme outlier thresholds)
 #'@param x = variable
-#'@return A data frame with mild and extreme outliers if outliers are present
+#'@return Returns a list with 4 objects showing mild and extreme outliers and the thresholds for each.
+
 
 Outliers <- function(x){
   x <- na.omit(x)
@@ -45,7 +46,6 @@ Outliers <- function(x){
 OutlierPercentage <- function(x){
   outliers <- Outliers(x)
   #calculate percentage of obs that are outliers:
-  #if (outliers != "There are no outliers in this variable"){
 
   PercentageMildOutliers <- (sum(!is.na(outliers$MildOutlier[,2]))/length(x))*100
   PercentageExtremeOutliers <- (sum(!is.na(outliers$ExtremeOutliers[,2]))/length(x))*100
@@ -79,9 +79,10 @@ OutlierMean <- function(x){
 }
 #######################################################################################################
 #'Outlier detection and outlier summary statistics
-#'@description This function will return identified mild and extreme outliers, provide a boxplot of the variable and summary statistics for the variable with and without mild/extreme outliers
+#'@description This function will return a list of 6 objects detailing identified mild and extreme outliers, outlier thresholds and summary statistics for the variable with and without mild/extreme outliers
 #'@param x = variable
-#'@return A boxplot and list of data frames (1: Values of mild and extreme outliers, 2: The percentage of obseervations that are mild and extreme outliers, 3: The mean of x with and without mild and extreme outliers) )
+#'@return list of 6 objects (1:mild outliers, 2: extreme outliers, 3: mild outlier thresholds, 4: extreme outlier thresholds, 5: Percentage mild and extreme outleirs, 6: variable with and  without mild and extreme outliers)
+
 
 # main function that computes all outlier sub-functions
 Outlier <- function(x){
