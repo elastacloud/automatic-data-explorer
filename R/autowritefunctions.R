@@ -27,17 +27,26 @@
 #'             title= c("##Scatter Plot",
 #'                      "##Correlations"))
 insertChunk <- function(filename, object,
-                       title = NULL) {
+                       chunktitle = NULL) {
+
+  # Error if .Rmd file does not exist
+  if(!file.exists(filename)) {
+    stop("R Markdown file `", filename, "` not found", call. = FALSE)
+  }
+
+  if(any(!stringr::str_detect(chunktitle, "#"))) {
+    warning("Titles without # will not render correctly")
+  }
 
   if(is.expression(object)) {
-    deparsed <- purrr::map_chr(object, ~ deparse(.))
+    deparsed <- purrr::map_chr(object, ~ deparse(.))  # Deparse the provided expressions
 
     for(i in seq_along(deparsed)) {
-      writeChunk(deparsed[[i]], filename = filename, title = title[[i]])
+      writeChunk(deparsed[[i]], filename = filename, chunktitle = chunktitle[[i]])
     }
   } else {
     do <- deparse(substitute(object))
-    writeChunk(do, filename = filename, title = title)
+    writeChunk(do, filename = filename, chunktitle = chunktitle)
   }
 
   filename
@@ -45,18 +54,15 @@ insertChunk <- function(filename, object,
 }
 
 
-writeChunk <- function(object, filename,
-                       title = NULL) {
-
-  if(is.null(title)) {
-    write(c("```{r}", object, "```"), file = filename, append = TRUE)
-  } else {
-    write(c(title,"```{r}", object, "```"), file = filename, append = TRUE)
-  }
-
-}
-
-
+#' Insert a YAML header into the R Markdown file
+#' @param filename The name of the file, including the .Rmd extension, into
+#' which the YAML header should be inserted
+#' @param title Character giving the title of the document
+#' @param author Character giving the author's name
+#' @param date If \code{NULL} inserts \code{Sys.Date()} into the date field.
+#' @param output The document type that will be generated, e.g. \code{"html_document"
+#' "pdf"}
+#' @return Returns the filename to allow chaining with other insert functions
 insertYAML <- function(filename,
                        title = NULL, author = NULL, date = NULL,
                        output = "html_document") {
@@ -110,30 +116,19 @@ createFile <- function(filename,
   rmdname
 }
 
-openFile <- function(filename,
-                     filedir = "current") {
 
-  rmdname <- paste0(filename, ".Rmd")
+# This function will not be available to the user
+writeChunk <- function(object, filename,
+                       chunktitle = NULL) {
 
-  if(filedir == "current") {
-    tmp <- file(file.path(getwd(), rmdname))
+  if(is.null(title)) {
+    write(c("```{r}", object, "```"), file = filename, append = TRUE)
   } else {
-    if (!dir.exists(filedir)) {
-      stop("Directory `", filedir, "` does not exist", call. = FALSE)
-    } else {
-      tmp <- file(file.path(filedir, rmdname))
-    }
-
+    write(c(chunktitle,"```{r}", object, "```"), file = filename, append = TRUE)
   }
-
-  open(tmp, "w")
-
-  if(isOpen(tmp)) {
-    message("Connection to `", rmdname, "` successfully opened")
-  } else {
-    stop("Connection `", rmdname, "` could not be made", call. = FALSE)
-  }
-
- # return(tmp)
 
 }
+
+
+
+
