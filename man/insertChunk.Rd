@@ -4,7 +4,7 @@
 \alias{insertChunk}
 \title{Insert a code chunk into an R Markdown file}
 \usage{
-insertChunk(filename, object, title = NULL)
+insertChunk(filename, object, chunktitle = NULL)
 }
 \arguments{
 \item{filename}{Character giving the name of the R Markdown file that the
@@ -30,7 +30,7 @@ with \code{\%>\%} is possible, by returning \code{filename} from the function.
 }
 \examples{
 ## Insert single chunk, chained from createFile() function
-createFile("Mtcars") \%>\%
+createFile("Mtcars") \%>\% insertLibraries() \%>\%
            insertChunk(summary(mtcars), title = "#Summary")
 
 ## Insert multiple chunks to existing file, with headers

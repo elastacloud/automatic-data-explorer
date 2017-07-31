@@ -83,10 +83,22 @@ insertYAML <- function(filename,
   filename
 }
 
+
+#' Insert attach package code chunk
+#' @param filename The name of the file, including the .Rmd extension, into
+#' which the code chunk should be inserted
+#' @param libraries Character vector giving the names of the packages to attach
+#' @return Returns the filename to allow chaining with other insert functions
 insertLibraries <- function(filename,
                             libraries = c("AutoExploreR", "ggplot2",
                                           "plotly")) {
 
+  # Error if .Rmd file does not exist
+  if(!file.exists(filename)) {
+    stop("R Markdown file `", filename, "` not found", call. = FALSE)
+  }
+
+  # Paste library names into library function call
   libraries <- purrr::map_chr(libraries, ~ paste0("library(", ., ")"))
 
   write(c("```{r}", libraries, "```"), file = filename, append = TRUE)
@@ -96,7 +108,13 @@ insertLibraries <- function(filename,
 
 
 
-
+#' Generate a named R Markdown file in a given directory
+#' @param filename Character giving the desired name of the R Markdown file, does
+#' not require the \code{.Rmd} extension
+#' @param filedir Default \code{"current"} will write the file to the current working
+#' directory, given by \code{getwd()}. Provide a character to give an alternative
+#' @return Returns the name of the file, including the \code{.Rmd} extension so that
+#' insert functions can be chained after
 createFile <- function(filename,
                        filedir = "current") {
 
