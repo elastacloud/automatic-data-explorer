@@ -8,8 +8,8 @@
 #' @param interactiveplot If \code{FALSE}, the default, returns a ggplot
 #' visualisation of the histogram of the target variable. If \code{TRUE},
 #' returns a interactive plotly visualisation of the histogram.
-gghistogram <- function(df, target,
-                        interactiveplot = FALSE){
+autoHistogramPlot <- function(df, target,
+                        interactiveplot = FALSE) {
 
 
 
@@ -35,8 +35,8 @@ gghistogram <- function(df, target,
 #' @param interactiveplot If \code{FALSE}, the default, returns a ggplot
 #' visualisation of the density estimate of the target variable. If
 #' \code{TRUE}, returns a interactive plotly visualisation of the histogram.
-ggdensity <- function(df, target,
-                      interactiveplot = FALSE){
+autoDensityPlot <- function(df, target,
+                      interactiveplot = FALSE) {
 
   outplot <- ggplot(df, aes_string(target), environment = environment()) +
                       geom_density(colour = "black")
@@ -52,4 +52,22 @@ ggdensity <- function(df, target,
   }
 }
 
+
+#' Plot a correlation matrix
+autoCorrelationPlot <- function(m,
+                                theme = NULL, interactiveplot = FALSE) {
+
+  if(interactiveplot) {
+    if (is.null(theme)) {
+      #plotly::plot_ly(x = colnames(m), y = rownames(m),z = m, type = "heatmap")
+      heatmaply::heatmaply(m, limits = c(-1, 1))
+    } else {
+      #plotly::plot_ly(x = colnames(m), y = rownames(m),z = m, type = "heatmap", colors = theme)
+    }
+  } else {
+    corrplot::corrplot(m)
+  }
+
+
+}
 
