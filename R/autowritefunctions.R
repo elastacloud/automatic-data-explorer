@@ -68,7 +68,7 @@ insertYAML <- function(filename,
                        output = "html_document") {
 
   if(is.null(date)) {
-    date <- Sys.Date()
+    date <- Sys.Date()  # Use system date if not given
   }
 
   title <- paste0("title: ", title)
@@ -120,6 +120,7 @@ createFile <- function(filename,
 
   rmdname <- paste0(filename, ".Rmd")
 
+  # Use current working directory if specific one not given
   if(filedir == "current") {
     file.create(file.path(getwd(), rmdname))
   } else {
