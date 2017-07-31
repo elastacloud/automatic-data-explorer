@@ -10,19 +10,35 @@ insertChunk(filename, object, title = NULL)
 \item{filename}{Character giving the name of the R Markdown file that the
 chunk should be inserted into, minus the \code{.Rmd} extension}
 
-\item{object}{Can be any unquoted line of R code, i.e. a call to a function}
+\item{object}{Can be any unquoted line of R code, i.e. a call to a function to insert a
+single line. To insert more than one line, pass as a vector of type \code{"expression"}.}
 
-\item{title}{Character giving an optional markdown header that will can
+\item{title}{Single or vector of character/s giving an optional markdown header that will be
 included before the code chunk e.g. of the form \code{# Header, ## Header,
-### Header}}
+### Header}. Pass as a vector of titles of equal length to object expressions
+if multiple headers required.}
 }
 \value{
 Returns \code{filename} so that functions can be chained to write
 to the same file consecutively
 }
 \description{
-This function can be used to insert any line of code
+This function can be used to insert any line or lines of code
 into an R Markdown file. The chunk will be inserted into the file called
-\code{filename}, which must exist in the current working directory. Chaining
+\code{filename.Rmd}, which must exist in the current working directory. Chaining
 with \code{\%>\%} is possible, by returning \code{filename} from the function.
+}
+\examples{
+## Insert single chunk, chained from createFile() function
+createFile("Mtcars") \%>\%
+           insertChunk(summary(mtcars), title = "#Summary")
+
+## Insert multiple chunks to existing file, with headers
+
+insertChunk("Mtcars.Rmd",
+            expression(
+            plot(mtcars$cyl, mtcars$hp),
+            multivariateCorrelation(mtcars)),
+            title= c("##Scatter Plot",
+                     "##Correlations"))
 }
