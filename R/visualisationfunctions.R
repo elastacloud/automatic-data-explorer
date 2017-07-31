@@ -54,20 +54,27 @@ autoDensityPlot <- function(df, target,
 
 
 #' Plot a correlation matrix
+#' @description Given a correlation matrix this function will generate a
+#' correlation plot.
+#' @param m Correlation matrix
+#' @param cluster
 autoCorrelationPlot <- function(m,
-                                theme = NULL, interactiveplot = FALSE) {
+                                cluster = FALSE, interactiveplot = FALSE) {
 
-  if(interactiveplot) {
-    if (is.null(theme)) {
-      #plotly::plot_ly(x = colnames(m), y = rownames(m),z = m, type = "heatmap")
-      heatmaply::heatmaply(m, limits = c(-1, 1))
+  if(cluster) {
+    if(interactiveplot) {
+        heatmaply::heatmaply(m, limits = c(-1, 1))
     } else {
-      #plotly::plot_ly(x = colnames(m), y = rownames(m),z = m, type = "heatmap", colors = theme)
+      corrplot::corrplot(m, order = "hclust")
     }
   } else {
-    corrplot::corrplot(m)
+    if(interactiveplot) {
+        heatmaply::heatmaply(m, Colv = F, Rowv = F , limits = c(-1, 1))
+    } else {
+      corrplot::corrplot(m)
+    }
   }
-
-
 }
+
+
 
