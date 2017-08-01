@@ -60,6 +60,10 @@ autoDensityPlot <- function(df, target,
 #' @param m Correlation matrix to plot
 #' @param cluster If \code{cluster = TRUE} then the correlation matrix will be
 #' reordered using the \code{"hclust"} method in \code{corrplot::corrMatOrder}
+#' @param interactiveplot If \code{FALSE}, the default, returns a \code{corrplot}
+#' visualisation of the correlation matrix. If \code{TRUE}, returns a interactive
+#' \code{heatmaply} visualisation of the correlation matrix
+#' @return Correlation plot of the provided correlation matrix
 autoCorrelationPlot <- function(m,
                                 cluster = FALSE, interactiveplot = FALSE) {
 
@@ -75,14 +79,19 @@ autoCorrelationPlot <- function(m,
                                  " matrix is not symmetrical"))
   }
 
+  # Reorder correlation matrix based on hclust of correlations
+  if(cluster) {
+    newidxs <- corrplot::corrMatOrder(m, order = "hclust")
+    m <- m[newidxs, newidxs]
+  }
 
-  if(cluster) {  # Cluster the variables in the plot
+  if(cluster) {  # Use reordered matrix for the plot
     if(interactiveplot) {
-      heatmaply::heatmaply(m, limits = c(-1, 1))
+      heatmaply::heatmaply(m, Colv = F, Rowv = F , limits = c(-1, 1))
     } else {
-      corrplot::corrplot(m, order = "hclust")
+      corrplot::corrplot(m)
     }
-  } else {  # Otherwise, don't cluster
+  } else {  # Otherwise, don't
     if(interactiveplot) {
       heatmaply::heatmaply(m, Colv = F, Rowv = F , limits = c(-1, 1))
     } else {
