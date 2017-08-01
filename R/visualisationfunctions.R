@@ -55,9 +55,11 @@ autoDensityPlot <- function(df, target,
 
 #' Plot a correlation matrix
 #' @description Given a correlation matrix this function will generate a
-#' correlation plot.
-#' @param m Correlation matrix
-#' @param cluster
+#' correlation plot. Uses \code{corrplot::corrplot} for non-interactive plotting
+#' and \code{heatmaply::heatmaply} for interactive plotting
+#' @param m Correlation matrix to plot
+#' @param cluster If \code{cluster = TRUE} then the correlation matrix will be
+#' reordered using the \code{"hclust"} method in \code{corrplot::corrMatOrder}
 autoCorrelationPlot <- function(m,
                                 cluster = FALSE, interactiveplot = FALSE) {
 
@@ -73,13 +75,14 @@ autoCorrelationPlot <- function(m,
                                  " matrix is not symmetrical"))
   }
 
-  if(cluster) {
+
+  if(cluster) {  # Cluster the variables in the plot
     if(interactiveplot) {
       heatmaply::heatmaply(m, limits = c(-1, 1))
     } else {
       corrplot::corrplot(m, order = "hclust")
     }
-  } else {
+  } else {  # Otherwise, don't cluster
     if(interactiveplot) {
       heatmaply::heatmaply(m, Colv = F, Rowv = F , limits = c(-1, 1))
     } else {
