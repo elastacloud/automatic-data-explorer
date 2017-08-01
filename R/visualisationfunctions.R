@@ -5,13 +5,22 @@
 #' histogram visualisation of the chosen target variable.
 #' @param df Dataframe that contains the target variable
 #' @param target String giving the name of the target variable
-#' @param binwidth
+#' @param binwidth The width of the bins. The default \code{NULL} gives
+#' standard \code{ggplot2::geom_histogram} but should be overridden with
+#' your own value
 #' @param interactiveplot If \code{FALSE}, the default, returns a ggplot
 #' visualisation of the histogram of the target variable. If \code{TRUE},
 #' returns a interactive plotly visualisation of the histogram.
+#' @param xlabel Provide a character to override the default label for the
+#' x axis
+#' @param ... Other arguments passed onto \code{ggplot2::geom_histogram}, such as
+#' \code{colour = "blue"} or \code{fill = NA}
+#' @param stat Defaults to \code{stat = "bin"} for numeric data. If categorical data
+#' is passed then the function will automatically change to \code{stat = "count"}
+#' @return A histogram of the target variable from the provided data
 autoHistogramPlot <- function(df, target,
                               binwidth = NULL, interactiveplot = FALSE,
-                              xlabel = NULL, ...) {
+                              xlabel = NULL, ..., stat = "bin") {
 
   target <- substitute(target)
 
@@ -19,9 +28,15 @@ autoHistogramPlot <- function(df, target,
     target <- deparse(target)
   }
 
-  # The ... argument allows the user to pass
+  # If none numeric data is being used change to stat = 'count'
+  if (is.character(df[[target]]) | is.factor(df[[target]])) {
+    stat <- "count"
+    message("Using stat = 'count'")
+  }
+
+  # The ... argument allows the user to collect arguments to call another function
   outplot <- ggplot(df, aes_string(target), environment = environment()) +
-                      geom_histogram(binwidth = binwidth, ...) +
+                      geom_histogram(binwidth = binwidth, stat = stat, ...) +
                       xlab(ifelse(is.null(xlabel), target, xlabel))
 
   if(interactiveplot) {
