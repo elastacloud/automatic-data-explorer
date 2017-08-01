@@ -5,16 +5,24 @@
 #' histogram visualisation of the chosen target variable.
 #' @param df Dataframe that contains the target variable
 #' @param target String giving the name of the target variable
+#' @param binwidth
 #' @param interactiveplot If \code{FALSE}, the default, returns a ggplot
 #' visualisation of the histogram of the target variable. If \code{TRUE},
 #' returns a interactive plotly visualisation of the histogram.
 autoHistogramPlot <- function(df, target,
-                        interactiveplot = FALSE) {
+                              binwidth = NULL, interactiveplot = FALSE,
+                              xlabel = NULL, ...) {
 
+  target <- substitute(target)
 
+  if(is.symbol(target)) {
+    target <- deparse(target)
+  }
 
+  # The ... argument allows the user to pass
   outplot <- ggplot(df, aes_string(target), environment = environment()) +
-                      geom_histogram(colour = "black")
+                      geom_histogram(binwidth = binwidth, ...) +
+                      xlab(ifelse(is.null(xlabel), target, xlabel))
 
   if(interactiveplot) {
 
@@ -37,6 +45,12 @@ autoHistogramPlot <- function(df, target,
 #' \code{TRUE}, returns a interactive plotly visualisation of the histogram.
 autoDensityPlot <- function(df, target,
                       interactiveplot = FALSE) {
+
+  target <- substitute(target)
+
+  if(is.symbol(target)) {
+    target <- deparse(target)
+  }
 
   outplot <- ggplot(df, aes_string(target), environment = environment()) +
                       geom_density(colour = "black")
