@@ -61,15 +61,27 @@ autoDensityPlot <- function(df, target,
 autoCorrelationPlot <- function(m,
                                 cluster = FALSE, interactiveplot = FALSE) {
 
+  # Check that m is a matrix
+  if (!is.matrix(m)) {
+    stop("`m` is of class ", class(m),"; it must be a matrix")
+  }
+
+  # Check that the passed matrix is a correlation matrix
+  if (any(abs(m) > 1) | !isSymmetric(m)) {
+    stop("`m` does not appear to be a correlation matrix:",
+         ifelse(any(abs(m) > 1), " all elements ![-1, 1]",
+                                 " matrix is not symmetrical"))
+  }
+
   if(cluster) {
     if(interactiveplot) {
-        heatmaply::heatmaply(m, limits = c(-1, 1))
+      heatmaply::heatmaply(m, limits = c(-1, 1))
     } else {
       corrplot::corrplot(m, order = "hclust")
     }
   } else {
     if(interactiveplot) {
-        heatmaply::heatmaply(m, Colv = F, Rowv = F , limits = c(-1, 1))
+      heatmaply::heatmaply(m, Colv = F, Rowv = F , limits = c(-1, 1))
     } else {
       corrplot::corrplot(m)
     }
