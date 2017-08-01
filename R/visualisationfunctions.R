@@ -1,8 +1,8 @@
 
 
 #' Create a histogram of a target variable
-#' @description Generates either a static ggplot or interactive plotly
-#' histogram visualisation of the chosen target variable.
+#' @description Generates either a static \code{ggplot} or interactive
+#' \code{plotly} histogram visualisation of the chosen target variable.
 #' @param df Dataframe that contains the target variable
 #' @param target String giving the name of the target variable
 #' @param binwidth The width of the bins. The default \code{NULL} gives
@@ -10,7 +10,7 @@
 #' your own value
 #' @param interactiveplot If \code{FALSE}, the default, returns a ggplot
 #' visualisation of the histogram of the target variable. If \code{TRUE},
-#' returns a interactive plotly visualisation of the histogram.
+#' returns an interactive plotly visualisation of the histogram.
 #' @param xlabel Provide a character to override the default label for the
 #' x axis
 #' @param ... Other arguments passed onto \code{ggplot2::geom_histogram}, such as
@@ -51,15 +51,20 @@ autoHistogramPlot <- function(df, target,
 }
 
 #' Create a densiy estimate of a target variable
-#' @description Generates either a static ggplot or interactive plotly
-#' density estimate visualisation of the chosen target variable.
+#' @description Generates either a static \code{ggplot} or interactive
+#' \code{plotly} density estimate visualisation of the chosen target variable using
+#' \code{ggplot2::geom_density}.
 #' @param df Dataframe that contains the target variable
 #' @param target String giving the name of the target variable
-#' @param interactiveplot If \code{FALSE}, the default, returns a ggplot
+#' @param interactiveplot If \code{FALSE}, the default, returns a \code{ggplot2}
 #' visualisation of the density estimate of the target variable. If
-#' \code{TRUE}, returns a interactive plotly visualisation of the histogram.
+#' \code{TRUE}, returns an interactive \code{plotly} visualisation of the histogram.
+#' @param ... Other arguments passed onto \code{ggplot2::geom_density}, such as
+#' \code{colour = "red"} or \code{size = 2}
+#' @return A density estimate visualisation of the target variable from the
+#' provided data
 autoDensityPlot <- function(df, target,
-                      interactiveplot = FALSE) {
+                      interactiveplot = FALSE, xlabel = NULL, ...) {
 
   target <- substitute(target)
 
@@ -68,7 +73,8 @@ autoDensityPlot <- function(df, target,
   }
 
   outplot <- ggplot(df, aes_string(target), environment = environment()) +
-                      geom_density(colour = "black")
+                      geom_density(...) +
+                      xlab(ifelse(is.null(xlabel), target, xlabel))
 
   if(interactiveplot) {
 
