@@ -24,7 +24,7 @@ autoHistogramPlot <- function(df, target,
 
   target <- substitute(target)
 
-  if(is.symbol(target)) {
+  if (is.symbol(target)) {
     target <- deparse(target)
   }
 
@@ -39,14 +39,10 @@ autoHistogramPlot <- function(df, target,
                       geom_histogram(binwidth = binwidth, stat = stat, ...) +
                       xlab(ifelse(is.null(xlabel), target, xlabel))
 
-  if(interactiveplot) {
-
+  if (interactiveplot) {
     plotly::ggplotly(outplot)
-
   } else {
-
     outplot
-
   }
 }
 
@@ -68,22 +64,23 @@ autoDensityPlot <- function(df, target,
 
   target <- substitute(target)
 
-  if(is.symbol(target)) {
+  if (is.symbol(target)) {
     target <- deparse(target)
+  }
+
+  if (!is.numeric(df[[target]])) {
+    stop("None-numeric data is not currently supported for this function",
+         call. = FALSE)
   }
 
   outplot <- ggplot(df, aes_string(target), environment = environment()) +
                       geom_density(...) +
                       xlab(ifelse(is.null(xlabel), target, xlabel))
 
-  if(interactiveplot) {
-
+  if (interactiveplot) {
     plotly::ggplotly(outplot)
-
   } else {
-
     outplot
-
   }
 }
 
@@ -104,7 +101,7 @@ autoCorrelationPlot <- function(m,
 
   # Check that m is a matrix
   if (!is.matrix(m)) {
-    stop("`m` is of class ", class(m),"; it must be a matrix")
+    stop("`m` is of class ", class(m), "; it must be a matrix")
   }
 
   # Check that the passed matrix is a correlation matrix
@@ -115,25 +112,23 @@ autoCorrelationPlot <- function(m,
   }
 
   # Reorder correlation matrix based on hclust of correlations
-  if(cluster) {
+  if (cluster) {
     newidxs <- corrplot::corrMatOrder(m, order = "hclust")
     m <- m[newidxs, newidxs]
   }
 
-  if(cluster) {  # Use reordered matrix for the plot
-    if(interactiveplot) {
-      heatmaply::heatmaply(m, Colv = F, Rowv = F , limits = c(-1, 1))
+  # Use reordered matrix for the plot if cluster = TRUE
+  if (cluster) {
+    if (interactiveplot) {
+      heatmaply::heatmaply(m, Colv = F, Rowv = F, limits = c(-1, 1))
     } else {
       corrplot::corrplot(m)
     }
-  } else {  # Otherwise, don't
-    if(interactiveplot) {
-      heatmaply::heatmaply(m, Colv = F, Rowv = F , limits = c(-1, 1))
+  } else {
+    if (interactiveplot) {
+      heatmaply::heatmaply(m, Colv = F, Rowv = F, limits = c(-1, 1))
     } else {
       corrplot::corrplot(m)
     }
   }
 }
-
-
-
