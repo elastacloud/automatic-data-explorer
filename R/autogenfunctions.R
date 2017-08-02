@@ -15,6 +15,7 @@
 #' @param writedoc Default \code{writedoc = TRUE} will auto generate the final document.
 #' Changing to \code{writedoc = FALSE} will prevent the input .Rmd from being rendered to the
 #' specified input (currently only .html) to allow review
+#' @export
 #' @return If \code{writedoc = TRUE} writes .Rmd file and auto generated document to \code{documentwd}.
 #' If \code{writedoc = FALSE} writes .Rmd file only.
 createDocument <- function(df, target, template, reporttitle, reportauthor,
@@ -45,13 +46,10 @@ createDocument <- function(df, target, template, reporttitle, reportauthor,
     stop("Directory '", documentwd , "' not found, please choose another", call. = FALSE)
   }
 
+  templatename <- paste0(template, "Template.Rmd")
 
-
-  if(template == "univariate") {
-
-    intemplate <- readLines("./templates/univariateTemplate.Rmd")
-
-  }
+  intemplate <- readLines(system.file("extdata", templatename,
+                                        package = "AutoExploreR"))
 
   intemplate <- edittemplate(template = intemplate, df = dfname, target = target,
                              reporttitle = reporttitle,
@@ -67,26 +65,5 @@ createDocument <- function(df, target, template, reporttitle, reportauthor,
 }
 
 
-writedocument <- function(editedtemplate, name, wd) {
-
-  outlocation <- file.path(wd, name)    #paste(wd, name, sep = "")
-  writeLines(text = editedtemplate, con = outlocation)
-  rmarkdown::render(outlocation)
-
-}
 
 
-
-
-edittemplate <- function(template, df, target, reporttitle, reportauthor) {
-
-  template[grep("title: Test", template)] <- paste0("title: ", reporttitle)
-  template[grep("author: Andrew", template)] <- paste0("author: ", reportauthor)
-
-  template <- gsub("(?<=\')variableName(?=\')", target, template, perl = T)
-
-  template <- gsub("dataName", df, template)
-
-  template
-
-}

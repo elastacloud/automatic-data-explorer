@@ -13,7 +13,7 @@ chunk should be inserted into, minus the \code{.Rmd} extension}
 \item{object}{Can be any unquoted line of R code, i.e. a call to a function to insert a
 single line. To insert more than one line, pass as a vector of type \code{"expression"}.}
 
-\item{title}{Single or vector of character/s giving an optional markdown header that will be
+\item{chunktitle}{Single or vector of character/s giving an optional markdown header that will be
 included before the code chunk e.g. of the form \code{"# Header", "## Header",
 "### Header"}. Pass as a vector of titles of equal length to object expressions
 if multiple headers required.}
@@ -29,9 +29,10 @@ into an R Markdown file. The chunk will be inserted into the file called
 with \code{\%>\%} is possible, by returning \code{filename} from the function.
 }
 \examples{
-## Insert single chunk, chained from createFile() function
 
 \dontrun{
+
+## Insert single chunk, chained from createFile() function
 
 createFile("Mtcars") \%>\% insertLibraries() \%>\%
            insertChunk(summary(mtcars), title = "#Summary")

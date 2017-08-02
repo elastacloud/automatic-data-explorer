@@ -8,15 +8,18 @@
 #' chunk should be inserted into, minus the \code{.Rmd} extension
 #' @param object Can be any unquoted line of R code, i.e. a call to a function to insert a
 #' single line. To insert more than one line, pass as a vector of type \code{"expression"}.
-#' @param title Single or vector of character/s giving an optional markdown header that will be
+#' @param chunktitle Single or vector of character/s giving an optional markdown header that will be
 #' included before the code chunk e.g. of the form \code{"# Header", "## Header",
 #' "### Header"}. Pass as a vector of titles of equal length to object expressions
 #' if multiple headers required.
+#' @export
 #' @return Returns \code{filename} so that functions can be chained to write
 #' to the same file consecutively
-#' @examples ## Insert single chunk, chained from createFile() function
+#' @examples
 #'
 #' \dontrun{
+#'
+#' ## Insert single chunk, chained from createFile() function
 #'
 #' createFile("Mtcars") %>% insertLibraries() %>%
 #'            insertChunk(summary(mtcars), title = "#Summary")
@@ -29,7 +32,7 @@
 #'             multivariateCorrelation(mtcars)),
 #'             title= c("##Scatter Plot",
 #'                      "##Correlations"))
-#'}
+#' }
 insertChunk <- function(filename, object,
                        chunktitle = NULL) {
 
@@ -64,9 +67,17 @@ insertChunk <- function(filename, object,
 #' @param title Character giving the title of the document
 #' @param author Character giving the author's name
 #' @param date If \code{NULL} inserts \code{Sys.Date()} into the date field.
-#' @param output The document type that will be generated, e.g. \code{"html_document"
+#' @param output The document type that will be generated, e.g. \code{"html_document",
 #' "pdf"}
+#' @export
 #' @return Returns the filename to allow chaining with other insert functions
+#' @examples
+#' \dontrun{
+#'
+#' createFile("Test File") %>%
+#'           insertYAML(title = "Test Report",
+#'                      author = "J. Bloggs",)
+#' }
 insertYAML <- function(filename,
                        title = NULL, author = NULL, date = NULL,
                        output = "html_document") {
@@ -92,6 +103,7 @@ insertYAML <- function(filename,
 #' @param filename The name of the file, including the .Rmd extension, into
 #' which the code chunk should be inserted
 #' @param libraries Character vector giving the names of the packages to attach
+#' @export
 #' @return Returns the filename to allow chaining with other insert functions
 insertLibraries <- function(filename,
                             libraries = c("AutoExploreR", "ggplot2",
@@ -117,6 +129,7 @@ insertLibraries <- function(filename,
 #' not require the \code{.Rmd} extension
 #' @param filedir Default \code{"current"} will write the file to the current working
 #' directory, given by \code{getwd()}. Provide a character to give an alternative
+#' @export
 #' @return Returns the name of the file, including the \code{.Rmd} extension so that
 #' insert functions can be chained after
 createFile <- function(filename,
@@ -140,17 +153,7 @@ createFile <- function(filename,
 }
 
 
-# This function will not be available to the user
-writeChunk <- function(object, filename,
-                       chunktitle = NULL) {
 
-  if(is.null(title)) {
-    write(c("```{r}", object, "```"), file = filename, append = TRUE)
-  } else {
-    write(c(chunktitle,"```{r}", object, "```"), file = filename, append = TRUE)
-  }
-
-}
 
 
 

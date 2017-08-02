@@ -17,7 +17,7 @@ which the YAML header should be inserted}
 
 \item{date}{If \code{NULL} inserts \code{Sys.Date()} into the date field.}
 
-\item{output}{The document type that will be generated, e.g. \code{"html_document"
+\item{output}{The document type that will be generated, e.g. \code{"html_document",
 "pdf"}}
 }
 \value{
@@ -25,4 +25,12 @@ Returns the filename to allow chaining with other insert functions
 }
 \description{
 Insert a YAML header into the R Markdown file
+}
+\examples{
+\dontrun{
+
+createFile("Test File") \%>\%
+          insertYAML(title = "Test Report",
+                     author = "J. Bloggs",)
+}
 }
