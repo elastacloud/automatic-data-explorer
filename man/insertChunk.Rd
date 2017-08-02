@@ -14,8 +14,8 @@ chunk should be inserted into, minus the \code{.Rmd} extension}
 single line. To insert more than one line, pass as a vector of type \code{"expression"}.}
 
 \item{title}{Single or vector of character/s giving an optional markdown header that will be
-included before the code chunk e.g. of the form \code{# Header, ## Header,
-### Header}. Pass as a vector of titles of equal length to object expressions
+included before the code chunk e.g. of the form \code{"# Header", "## Header",
+"### Header"}. Pass as a vector of titles of equal length to object expressions
 if multiple headers required.}
 }
 \value{
@@ -30,6 +30,9 @@ with \code{\%>\%} is possible, by returning \code{filename} from the function.
 }
 \examples{
 ## Insert single chunk, chained from createFile() function
+
+\dontrun{
+
 createFile("Mtcars") \%>\% insertLibraries() \%>\%
            insertChunk(summary(mtcars), title = "#Summary")
 
@@ -41,4 +44,5 @@ insertChunk("Mtcars.Rmd",
             multivariateCorrelation(mtcars)),
             title= c("##Scatter Plot",
                      "##Correlations"))
+}
 }
