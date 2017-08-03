@@ -18,6 +18,8 @@
 #' @param stat Defaults to \code{stat = "bin"} for numeric data. If categorical data
 #' is passed then the function will automatically change to \code{stat = "count"}
 #' @return A histogram of the target variable from the provided data
+#' @export
+#' @importFrom ggplot2 ggplot aes_string geom_histogram xlab
 autoHistogramPlot <- function(df, target,
                               binwidth = NULL, interactiveplot = FALSE,
                               xlabel = NULL, ..., stat = "bin") {
@@ -55,10 +57,14 @@ autoHistogramPlot <- function(df, target,
 #' @param interactiveplot If \code{FALSE}, the default, returns a \code{ggplot2}
 #' visualisation of the density estimate of the target variable. If
 #' \code{TRUE}, returns an interactive \code{plotly} visualisation of the histogram.
+#' @param xlabel Provide a character to override the default label for the
+#' x axis
 #' @param ... Other arguments passed onto \code{ggplot2::geom_density}, such as
 #' \code{colour = "red"} or \code{size = 2}
 #' @return A density estimate visualisation of the target variable from the
 #' provided data
+#' @export
+#' @importFrom ggplot2 ggplot aes_string geom_density xlab
 autoDensityPlot <- function(df, target,
                       interactiveplot = FALSE, xlabel = NULL, ...) {
 
@@ -95,6 +101,7 @@ autoDensityPlot <- function(df, target,
 #' @param interactiveplot If \code{FALSE}, the default, returns a \code{corrplot}
 #' visualisation of the correlation matrix. If \code{TRUE}, returns a interactive
 #' \code{heatmaply} visualisation of the correlation matrix
+#' @export
 #' @return Correlation plot of the provided correlation matrix
 autoCorrelationPlot <- function(m,
                                 cluster = FALSE, interactiveplot = FALSE) {
