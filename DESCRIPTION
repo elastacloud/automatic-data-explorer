@@ -24,5 +24,10 @@ RoxygenNote: 6.0.1
 Imports: purrr,
     ggplot2,
     plotly,
+<<<<<<< HEAD
     rmarkdown,
     stringr
+=======
+    corrplot,
+    heatmaply
+>>>>>>> f3d50b9dccb87ebb35013cbfa1b8d4830ff813c9
