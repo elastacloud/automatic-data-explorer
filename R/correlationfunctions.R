@@ -10,7 +10,7 @@
 #' @param use Same as \code{use} in the \code{cor} function
 #' @param method Same as \code{method} in the \code{cor} function
 #' @return Named vector of the correlations, ordered by absolute highest to lowest.
-
+#' @export
 targetCorrelations <- function(df, target,
                                N = NULL,
                                use = "everything",
@@ -58,6 +58,7 @@ targetCorrelations <- function(df, target,
 #' @param method Same as \code{method} in the \code{cor} function.
 #' @return Returns the correlation matrix if \code{output = "matrix"} or dataframe of ordered
 #' variable pair correlations if \code{output = "ranked"}.
+#' @export
 multivariateCorrelation <- function(df,
                                     dropnotnumeric = TRUE,
                                     output = "ranked",
@@ -101,6 +102,7 @@ multivariateCorrelation <- function(df,
 #' is \code{FALSE}. Only recommended if \code{m} does not have names already.
 #' @return Dataframe with three columns; 1. variable 1, 2. variable 2 and
 #' 3. correlation
+#' @export
 rankCorrelations <- function(m,
                              N = NULL,
                              autoname = FALSE) {
