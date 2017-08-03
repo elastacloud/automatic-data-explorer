@@ -25,6 +25,6 @@ Imports: purrr,
     ggplot2,
     plotly,
     rmarkdown,
-    stringr
+    stringr,
     corrplot,
     heatmaply
