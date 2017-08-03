@@ -23,4 +23,6 @@ Suggests: testthat
 RoxygenNote: 6.0.1
 Imports: purrr,
     ggplot2,
-    plotly
+    plotly,
+    corrplot,
+    heatmaply
