@@ -15,9 +15,9 @@
 #' @param writedoc Default \code{writedoc = TRUE} will auto generate the final document.
 #' Changing to \code{writedoc = FALSE} will prevent the input .Rmd from being rendered to the
 #' specified input (currently only .html) to allow review
-#' @export
 #' @return If \code{writedoc = TRUE} writes .Rmd file and auto generated document to \code{documentwd}.
 #' If \code{writedoc = FALSE} writes .Rmd file only.
+#' @export
 createDocument <- function(df, target, template, reporttitle, reportauthor,
                          documentname, documentwd,
                          writedoc = TRUE) {
