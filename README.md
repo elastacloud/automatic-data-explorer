@@ -12,20 +12,20 @@ An R package to explore and quality check data. Contains a variety of useful fun
 
 To get started use a data frame and detail the column that you want to get target correlations for:
 
-  install.packages("purrr")
-  library(purrr)
+    install.packages("purrr")
+    library(purrr)
 
-  data <- data.frame(A = rnorm(50,0,1),
+    data <- data.frame(A = rnorm(50,0,1),
                        B = runif(50,10,20),
                        C = seq(1,50,1),
                        D = rep(LETTERS[1:5], 10))
 
-  targetCorrelations(data, "B")
+    targetCorrelations(data, "B")
 
 This should give a similar report to:
 
-         C          A 
-  0.40549008 0.01356416 
+             C          A 
+    0.40549008 0.01356416 
 
 
 
