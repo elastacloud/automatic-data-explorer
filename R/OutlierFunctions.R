@@ -2,93 +2,85 @@
 
 #'Outlier detection for numerical variables
 #'@description This function will return a list of 4 objects (1: a data frame with mild outliers and their indexes, 2: a data frame with extreme outliers and their indexes, 3: a vector with mild outlier thresholds, 4: a vector with extreme outlier thresholds)
-#'@param x = variable
+#'@param x variable of interest
 #'@return Returns a list with 4 objects showing mild and extreme outliers and the thresholds for each.
 
 
-Outliers <- function(x){
+OutlierValues <- function(x){
   x <- na.omit(x)
   lowerq <- quantile(x)[2]
   upperq <- quantile(x)[4]
   iqr <- upperq - lowerq
   #mild outliers:
-  mild.threshold.upper <- (iqr *1.5) + upperq
-  mild.threshold.lower <- lowerq - (iqr * 1.5)
-  Mild.thresholds <- c(mild.threshold.lower,mild.threshold.upper)
+  mildThresholdUpper <- (iqr *1.5) + upperq
+  mildThresholdLower <- lowerq - (iqr * 1.5)
+  mildThresholds <- c(mildThresholdLower,mildThresholdUpper)
   #extreme outliers:
-  extreme.threshold.upper <- (iqr * 3) + upperq
-  extreme.threshold.lower <- lowerq - (iqr * 3)
-  Extreme.thresholds <- c(extreme.threshold.lower,extreme.threshold.upper)
+  extremeThresholdUpper <- (iqr * 3) + upperq
+  extremeThresholdLower <- lowerq - (iqr * 3)
+  extremeThresholds <- c(extremeThresholdLower,extremeThresholdUpper)
   #calculate which values are potential outliers:
-  M.index <- which(x > mild.threshold.upper | x < mild.threshold.lower)
-  M.outliers <- x[M.index]
-  MildOutliers <- data.frame(Index = M.index, mild.outliers = M.outliers)
+  mIndex <- which(x > mildThresholdUpper | x < mildThresholdLower)
+  mOutliers <- x[mIndex]
+  mildOutliers <- data.frame(Index = mIndex, mildOutliers = mOutliers)
 
-  E.index <- which( x > extreme.threshold.upper | x < extreme.threshold.lower)
-  E.outliers <- x[E.index]
-  ExtremeOutliers <- data.frame(Index = E.index, extreme.outliers = E.outliers)
+  eIndex <- which( x > extremeThresholdUpper | x < extremeThresholdLower)
+  eOutliers <- x[eIndex]
+  extremeOutliers <- data.frame(Index = eIndex, extremeOutliers = eOutliers)
 
-  Outliers <- list(MildOutliers, ExtremeOutliers, Mild.thresholds, Extreme.thresholds)
-  names(Outliers) <- c("MildOutliers", "ExtremeOutliers", "MildThresholds", "ExtremeThresholds")
+  outlierValueResult <- list(mildOutliers, extremeOutliers, mildThresholds, extremeThresholds)
+  names(outlierValueResult) <- c("mildOutliers", "extremeOutliers", "mildThresholds", "extremeThresholds")
 
-  if (NROW(Outliers$ExtremeOutliers) == 0){
+  if (NROW(outlierValueResult$extremeOutliers) == 0 | NROW(outlierValueResult$mildOutliers) == 0){
     stop("There are no outliers in this variable", call. = FALSE)
   }else{
-    return(Outliers)
+    return(outlierValueResult)
   }
 }
 
 #'Percentage of observations which are mild and extreme outliers
 #'@description This function will calculate what percentage of observations are mild and extreme outliers
-#'@param x = variable
+#'@param outliers, The list output from the OutlierValues function, x, the variable of interest
 #'@return A data frame with the percentage of observations which are mild and extreme outliers
 
-OutlierPercentage <- function(x){
-  outliers <- Outliers(x)
-  #calculate percentage of obs that are outliers:
+OutlierPercentage <- function(outliers, x){
 
-  PercentageMildOutliers <- (sum(!is.na(outliers$MildOutlier[,2]))/length(x))*100
-  PercentageExtremeOutliers <- (sum(!is.na(outliers$ExtremeOutliers[,2]))/length(x))*100
+  percentageMildOutliers <- (sum(!is.na(outliers$mildOutliers[,2]))/length(x))*100
+  percentageExtremeOutliers <- (sum(!is.na(outliers$extremeOutliers[,2]))/length(x))*100
 
-  OutlierPercentage <- data.frame(PercentageMildOutliers, PercentageExtremeOutliers)
-
-  return(OutlierPercentage)
-  }
+  return(data.frame(percentageMildOutliers, percentageExtremeOutliers))
+}
 
 
 #' Mean with and without mild and extreme outliers
 #' @description This function will compute the mean of x with and without the mild and extreme outliers
-#' @param x = variable
+#' @param outliers, the list output from the OutlierValues function, x, the variable of interest
 #' @return A data frame with the mean without any outliers removed, the mean with mild and extreme outliers removed
 
-OutlierMean <- function(x){
-  outliers <- Outliers(x)
+OutlierMean <- function(outliers, x){
 
-  MildOutliers <- outliers$MildOutliers[,2]
-  ExtremeOutliers <- outliers$ExtremeOutliers[,2]
+  mildOutliers <- outliers$mildOutliers[,2]
+  extremeOutliers <- outliers$extremeOutliers[,2]
 
-  x = na.omit(x)
-  MeanWithOutliers <- mean(x)
-  MeanWithoutMildOutliers <- mean(x[!x %in% MildOutliers])
-  MeanWithoutExtremeOutliers <- mean(x[!x %in% ExtremeOutliers])
+  x <- na.omit(x)
+  meanWithOutliers <- mean(x)
+  meanWithoutMildOutliers <- mean(x[!x %in% mildOutliers])
+  meanWithoutExtremeOutliers <- mean(x[!x %in% extremeOutliers])
 
-  OutlierMeans <- data.frame(MeanWithOutliers, MeanWithoutMildOutliers, MeanWithoutExtremeOutliers)
-
-  return(OutlierMeans)
-
+  return(data.frame(meanWithOutliers, meanWithoutMildOutliers, meanWithoutExtremeOutliers))
 }
 #######################################################################################################
 #'Outlier detection and outlier summary statistics
 #'@description This function will return a list of 6 objects detailing identified mild and extreme outliers, outlier thresholds and summary statistics for the variable with and without mild/extreme outliers
-#'@param x = variable
+#'@param x, the variable of interest
 #'@return list of 6 objects (1:mild outliers, 2: extreme outliers, 3: mild outlier thresholds, 4: extreme outlier thresholds, 5: Percentage mild and extreme outleirs, 6: variable with and  without mild and extreme outliers)
 
 
 # main function that computes all outlier sub-functions
 Outlier <- function(x){
-  outliers <- Outliers(x)
-  outlierPercentage <- OutlierPercentage(x)
-  outlierMean <- OutlierMean(x)
+  outlierValues <- OutlierValues(x)
+  outlierPercentage <- OutlierPercentage(outlierValues,x)
+  outlierMean <- OutlierMean(outlierValues, x)
 
   Outliers <- list(outliers, outlierPercentage, outlierMean)
   names(Outliers) <- c("outliers", "outlierPercentage", "outlierMean")

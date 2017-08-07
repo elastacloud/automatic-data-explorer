@@ -5,26 +5,25 @@ test_that("Test the Outlier function on a dataset with outliers and NAs",{
 
   b <- c(1, 2,  3,  4,  5,  1,  2,  3,  4,  5, 50, 55, NA, NA)
 
-  outliers <- Outliers(b)
+  outliers <- OutlierValues(b)
 
   expect_that(class(outliers), equals("list"))
 
-  expect_that(length(outliers$MildOutliers), equals(2))
-  expect_that(outliers$MildOutliers[1,1], equals(11))
-  expect_that(outliers$MildOutliers[2,2], equals(55))
+  expect_that(length(outliers$mildOutliers), equals(2))
+  expect_that(outliers$mildOutliers[1,1], equals(11))
+  expect_that(outliers$mildOutliers[2,2], equals(55))
 
-  expect_that(length(outliers$ExtremeOutliers), equals(2))
-  expect_that(outliers$ExtremeOutliers[1,1], equals(11))
-  expect_that(outliers$ExtremeOutliers[2,2], equals(55))
+  expect_that(length(outliers$extremeOutliers), equals(2))
+  expect_that(outliers$extremeOutliers[1,1], equals(11))
+  expect_that(outliers$extremeOutliers[2,2], equals(55))
 
-  expect_that(length(outliers$MildThresholds), equals(2))
-  #expect_that(outliers$MildThresholds[1,1], equals(-2.5))
-  expect_that(outliers$MildThresholds[[1]], equals(-2.5))
-  expect_that(outliers$MildThresholds[[2]], equals(9.5))
+  expect_that(length(outliers$mildThresholds), equals(2))
+  expect_that(outliers$mildThresholds[[1]], equals(-2.5))
+  expect_that(outliers$mildThresholds[[2]], equals(9.5))
 
-  expect_that(length(outliers$ExtremeThresholds), equals(2))
-  expect_that(outliers$ExtremeThresholds[[1]], equals(-7))
-  expect_that(outliers$ExtremeThresholds[[2]], equals(14))
+  expect_that(length(outliers$extremeThresholds), equals(2))
+  expect_that(outliers$extremeThresholds[[1]], equals(-7))
+  expect_that(outliers$extremeThresholds[[2]], equals(14))
 })
 
 
@@ -32,7 +31,9 @@ test_that("Test the OutlierMean function works on a dataset with outliers and NA
 
   b <- c(1, 2,  3,  4,  5,  1,  2,  3,  4,  5, 50, 55, NA, NA)
 
-  outlierMean <- OutlierMean(b)
+  outliers <- OutlierValues(b)
+
+  outlierMean <- OutlierMean(outliers, b)
 
   expect_that(class(outlierMean), equals("data.frame"))
   expect_that(outlierMean[1,1], equals(11.25))
@@ -43,7 +44,9 @@ test_that("Test the OutlierPercentage function works on a dataset with outliers 
 
   b <- c(1, 2,  3,  4,  5,  1,  2,  3,  4,  5, 50, 55, NA, NA)
 
-  outlierPercentage <- OutlierPercentage(b)
+  outliers <- OutlierValues(b)
+
+  outlierPercentage <- OutlierPercentage(outliers,b)
 
   expect_that(class(outlierPercentage), equals("data.frame"))
   expect_equal(outlierPercentage[1,2],14.28571, tolerance = 1e-3)
@@ -69,7 +72,7 @@ test_that("Test the Outlier function on a dataset with no outliers",{
 
   C <- testdata$B
 
-  expect_error(Outliers(C))
+  expect_error(OutlierValues(C))
 })
 
 test_that("Test the OutlierMean function on a dataset with no outliers",{
@@ -108,4 +111,3 @@ test_that("Test the Outlier main function works with a dataset with no outliers"
 
   expect_error(Outlier(G))
 })
-
