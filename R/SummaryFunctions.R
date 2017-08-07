@@ -7,19 +7,20 @@
 
 SummaryStatsNum <- function(x){
 
-  MissingValues <- sum(is.na(x))
-  x = na.omit(x)
-  Mean <- mean (x)
-  SD <- sd (x)
-  SE <- function(x)sd(x)/sqrt(length(x))
-  Median <- median (x)
-  Min <- min (x)
-  Max <- max (x)
-  Range <- range (x)
-  Skew <- psych::skew (x)
-  Kurtosis <- psych::kurtosi (x)
+  missingvalues <- sum(is.na(x))
+  x <- na.omit(x)
+  mean <- mean(x)
+  sd <- sd(x)
+  se <- sd(x)/sqrt(length(x))
+  median <- median(x)
+  min <- min(x)
+  max <- max(x)
+  range <- range(x)
+  skew <- psych::skew(x)
+  kurtosis <- psych::kurtosi(x)
 
-  c(Missingvalues = MissingValues, Mean = Mean, SD = SD,  Median = Median, Min = Min, Max = Max, Range = Range, Skew = Skew, Kurtosis = Kurtosis)
+  c(missingvalues = missingvalues, mean = mean, sd = sd, se = se, median = median, min = min,
+    max = max, range = range, skew = skew, kurtosis = kurtosis)
 }
 
 #'Summary statistics for categorical variables
@@ -28,14 +29,13 @@ SummaryStatsNum <- function(x){
 #'@return Data frame with summary statistics (count and percentage) for each level of the categorical variable
 
 SummaryStatsCat <- function(x){
-  if (is.factor(x) == TRUE){
-    Count <- summary(x)
-    Sum <- sum(Count)
-    Percentage <- Count/Sum*100
-
-    Summary <- data.frame(Count, Percentage)
-    return(Summary)
-  } else{
-    stop ("x is not a vector of tpye: factor", call. = FALSE)
+  if (!is.factor(x)){
+    stop ("x is not a vector of type: factor", call. = FALSE)
   }
+    count <- summary(x)
+    sum <- sum(count)
+    percentage <- (count/sum)*100
+
+    summary <- data.frame(count, percentage)
+    summary
 }
