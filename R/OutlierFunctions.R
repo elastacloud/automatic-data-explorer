@@ -74,7 +74,7 @@ OutlierMean <- function(outliers, x){
 #'@description This function will return a list of 6 objects detailing identified mild and extreme outliers, outlier thresholds and summary statistics for the variable with and without mild/extreme outliers
 #'@param x, the variable of interest
 #'@return list of 6 objects (1:mild outliers, 2: extreme outliers, 3: mild outlier thresholds, 4: extreme outlier thresholds, 5: Percentage mild and extreme outleirs, 6: variable with and  without mild and extreme outliers)
-
+#'@export
 
 # main function that computes all outlier sub-functions
 Outlier <- function(x){
