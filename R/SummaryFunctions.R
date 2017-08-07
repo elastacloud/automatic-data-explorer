@@ -5,7 +5,7 @@
 #'@param x = variable
 #'@return vector with summary statistics
 
-SummaryStatsNum <- function(x){
+summary_stats_num <- function(x){
 
   missingvalues <- sum(is.na(x))
   x <- na.omit(x)
@@ -28,7 +28,7 @@ SummaryStatsNum <- function(x){
 #'@param x = variable
 #'@return Data frame with summary statistics (count and percentage) for each level of the categorical variable
 
-SummaryStatsCat <- function(x){
+summary_stat_cat <- function(x){
   if (!is.factor(x)){
     stop ("x is not a vector of type: factor", call. = FALSE)
   }
