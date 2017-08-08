@@ -1,9 +1,9 @@
 
 
 OutlierValues <- function(x){
-  x <- na.omit(x)
-  lowerq <- quantile(x)[2]
-  upperq <- quantile(x)[4]
+  x <- stats::na.omit(x)
+  lowerq <- stats::quantile(x)[2]
+  upperq <- stats::quantile(x)[4]
   iqr <- upperq - lowerq
   #mild outliers:
   mildThresholdUpper <- (iqr *1.5) + upperq
@@ -58,7 +58,7 @@ OutlierMean <- function(outliers, x){
 #######################################################################################################
 #' Outlier detection and outlier summary statistics
 #' @description This function will return a list of 6 objects detailing identified mild and extreme outliers, outlier thresholds and summary statistics for the variable with and without mild/extreme outliers
-#' @param x, the variable of interest
+#' @param x the variable of interest
 #' @return list of 6 objects (1:mild outliers, 2: extreme outliers, 3: mild outlier thresholds, 4: extreme outlier thresholds, 5: Percentage mild and extreme outleirs, 6: variable with and  without mild and extreme outliers)
 #' @export
 
