@@ -4,10 +4,17 @@
 \alias{OutlierMean}
 \title{Mean with and without mild and extreme outliers}
 \usage{
+<<<<<<< HEAD
 OutlierMean(outliers, x)
 }
 \arguments{
 \item{outliers, }{the list output from the OutlierValues function, x, the variable of interest}
+=======
+OutlierMean(x)
+}
+\arguments{
+\item{x}{= variable}
+>>>>>>> master
 }
 \value{
 A data frame with the mean without any outliers removed, the mean with mild and extreme outliers removed
