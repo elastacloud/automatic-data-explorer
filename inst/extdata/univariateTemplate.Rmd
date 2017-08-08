@@ -28,10 +28,10 @@ targetCorrelations(dataName, target = currvar, N = 10)
 
 ## Histogram
 ```{r Histogram}
-gghistogram(df = dataName, target = currvar, interactiveplot = TRUE)
+autoHistogramPlot_(df = dataName, target = currvar, interactiveplot = TRUE)
 ```
 
 ## Density
 ```{r Density}
-ggdensity(df = dataName, target = currvar, interactiveplot = TRUE)
+autoDensityPlot_(df = dataName, target = currvar, interactiveplot = TRUE)
 ```
