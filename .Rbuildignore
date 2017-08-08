@@ -1,4 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+<<<<<<< HEAD
+=======
 .travis.yml
 ^\.travis\.yml$
+>>>>>>> master

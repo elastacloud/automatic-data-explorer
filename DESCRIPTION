@@ -27,4 +27,5 @@ Imports: purrr,
     rmarkdown,
     stringr,
     corrplot,
-    heatmaply
+    heatmaply,
+    psych
