@@ -28,4 +28,7 @@ Imports: purrr,
     stringr,
     corrplot,
     heatmaply,
-    psych
+    psych,
+    fpc,
+    dplyr,
+    reshape2
