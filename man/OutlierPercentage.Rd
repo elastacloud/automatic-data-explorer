@@ -4,10 +4,17 @@
 \alias{OutlierPercentage}
 \title{Percentage of observations which are mild and extreme outliers}
 \usage{
+<<<<<<< HEAD
+OutlierPercentage(outliers, x)
+}
+\arguments{
+\item{outliers, }{The list output from the OutlierValues function, x, the variable of interest}
+=======
 OutlierPercentage(x)
 }
 \arguments{
 \item{x}{= variable}
+>>>>>>> master
 }
 \value{
 A data frame with the percentage of observations which are mild and extreme outliers

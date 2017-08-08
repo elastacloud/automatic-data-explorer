@@ -28,4 +28,11 @@ Imports: purrr,
     stringr,
     corrplot,
     heatmaply,
+<<<<<<< HEAD
+    psych,
+    fpc,
+    reshape2,
+    dplyr
+=======
     psych
+>>>>>>> master

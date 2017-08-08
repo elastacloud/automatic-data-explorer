@@ -39,9 +39,17 @@ SummaryStatsCat <- function(x){
   if (!is.factor(x)){
     stop ("x is not a vector of type: factor", call. = FALSE)
   }
+<<<<<<< HEAD
+    count <- summary(x)
+    sum <- sum(count)
+    percentage <- (count/sum) * 100
+
+    data.frame(count, percentage)
+=======
   count <- summary(x)
   sum <- sum(count)
   percentage <- (count/sum) * 100
 
   data.frame(count, percentage)
+>>>>>>> master
 }
