@@ -1,11 +1,5 @@
 
 
-#' Outlier detection for numerical variables
-#' @description This function will return a list of 4 objects (1: a data frame with mild outliers and their indexes, 2: a data frame with extreme outliers and their indexes, 3: a vector with mild outlier thresholds, 4: a vector with extreme outlier thresholds)
-#' @param x variable of interest
-#' @return Returns a list with 4 objects showing mild and extreme outliers and the thresholds for each.
-
-
 OutlierValues <- function(x){
   x <- na.omit(x)
   lowerq <- quantile(x)[2]
@@ -38,10 +32,7 @@ OutlierValues <- function(x){
   }
 }
 
-#' Percentage of observations which are mild and extreme outliers
-#' @description This function will calculate what percentage of observations are mild and extreme outliers
-#' @param outliers, The list output from the OutlierValues function, x, the variable of interest
-#' @return A data frame with the percentage of observations which are mild and extreme outliers
+
 
 OutlierPercentage <- function(outliers, x){
 
@@ -51,11 +42,6 @@ OutlierPercentage <- function(outliers, x){
   data.frame(percentageMildOutliers, percentageExtremeOutliers)
 }
 
-
-#' Mean with and without mild and extreme outliers
-#' @description This function will compute the mean of x with and without the mild and extreme outliers
-#' @param outliers, the list output from the OutlierValues function, x, the variable of interest
-#' @return A data frame with the mean without any outliers removed, the mean with mild and extreme outliers removed
 
 OutlierMean <- function(outliers, x){
 
