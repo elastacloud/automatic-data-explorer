@@ -12,19 +12,19 @@ OptimalEpsilon <- function(df){
 
   #Find the optimal epsilon value for dbscan
   hist1 <- list(hist$breaks, hist$counts)
-  hist1max <- max(unlist(lapply(hist1,length)))
-  hist1 <- lapply(hist1,function(x) c(x, rep(NA,hist1max-length(x))))
+  hist1max <- max(unlist(lapply(hist1, length)))
+  hist1 <- lapply(hist1,function(x) c(x, rep(NA, hist1max-length(x))))
   hist1 <- data.frame(hist1)
   colnames(hist1) <- c("Distance","Frequency")
   epsilon <- hist1[which.max(hist1$Frequency), 1]
   epsilon
 }
 
-#'Calculation of the optimal value for the minimum points parameter used in dbscan
-#'@description This function calculates the optimum value for the minimum points parameter in dbscan, based on the optimal epsilon value.
-#'The minimum points parameter specifies how many neighbours a point should have to be included in a cluster.
-#'@param df, a dataframe of numerical variables
-#'@return This function returns a list of the optimal values for the minimum points and epsilon parameters based on the inputted dataframe.
+#' Calculation of the optimal value for the minimum points parameter used in dbscan
+#' @description This function calculates the optimum value for the minimum points parameter in dbscan, based on the optimal epsilon value.
+#' The minimum points parameter specifies how many neighbours a point should have to be included in a cluster.
+#' @param df, a dataframe of numerical variables
+#' @return This function returns a list of the optimal values for the minimum points and epsilon parameters based on the inputted dataframe.
 
 OptimalMinPoints <- function(df){
   epsilon <- OptimalEpsilon(df)
@@ -35,10 +35,10 @@ OptimalMinPoints <- function(df){
   matLong <- reshape2::melt(distMat)
   matLong$flag <- matLong$value > 0.0 & matLong$value <= epsilon
   d <- dplyr::summarise(dplyr::group_by(matLong,Var1),count = sum(flag))
-  hist2 <-hist(d$count,col="red",main="Histogram of # of minmum points", xlab="# of minimum points")
+  hist2 <- hist(d$count, col="red", main="Histogram of # of minmum points", xlab="# of minimum points")
 
   hist3 <- list(hist2$breaks, hist$counts)
-  hist3max <- max(unlist(lapply(hist3,length)))
+  hist3max <- max(unlist(lapply(hist3, length)))
   hist3 <- data.frame(lapply(hist3,function(x) c(x, rep(NA, hist3max-length(x)))))
   colnames(hist3) <- c("Distance", "Frequency")
   minimumPts <- hist3[which.max(hist3$Frequency), 1]
@@ -50,13 +50,21 @@ OptimalMinPoints <- function(df){
 }
 
 
-#'Multivariate outlier detection for numerical variables
-#'@description This function will return a list of 2 objects (1: the original dataframe with an appended column identifying outliers (outliers==0), 2: A plot of the first two components of PCA, outliers identified in red)
-#'@param df, dataframe of numerical variables
-#'@return Returns a list of 2 objects (1: the original dataframe with an appended column identifying outliers (outliers==0), 2: A plot of the first two components of PCA, outliers identified in red)
-#'@export
+#' Multivariate outlier detection for numerical variables
+#' @description This function will return a list of 2 objects (1: the original dataframe with an appended column identifying outliers (outliers==0), 2: A plot of the first two components of PCA, outliers identified in red)
+#' @param df, dataframe of numerical variables
+#' @return Returns a list of 2 objects (1: the original dataframe with an appended column identifying outliers (outliers==0), 2: A plot of the first two components of PCA, outliers identified in red)
+#' @export
 
 MultivariateOutlier <- function(df){
+
+  for (i in seq_along(df)){
+    if(!is.numeric(i)){
+      stop ("df is not a vector of type: numeric", call. = FALSE)
+    }
+
+  }
+
   #replace all NAs with the mean of the column
   for(i in seq_along(df)){
     df[is.na(df[,i]), i] <- mean(df[,i], na.rm = TRUE)
@@ -79,7 +87,7 @@ MultivariateOutlier <- function(df){
 
   outliers <- data.frame(dbscanFit$cluster)
   dfOutliers <- cbind(df, outliers)
-  names(dfOutliers)[names(dfOutliers)== "dbscanFit.cluster"] <- "outliers"
+  names(dfOutliers)[names(dfOutliers) == "dbscanFit.cluster"] <- "outliers"
 
   Outliers <- list(dfOutliers,outliersPlot)
   names(Outliers) <- c("dfOutliers", "OutliersPlot")
