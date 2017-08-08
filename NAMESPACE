@@ -2,7 +2,9 @@
 
 export(autoCorrelationPlot)
 export(autoDensityPlot)
+export(autoDensityPlot_)
 export(autoHistogramPlot)
+export(autoHistogramPlot_)
 export(createDocument)
 export(createFile)
 export(insertChunk)
