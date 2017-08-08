@@ -4,16 +4,16 @@
 #' @description Generates either a static \code{ggplot} or interactive
 #' \code{plotly} histogram visualisation of the chosen target variable.
 #' @param df Dataframe that contains the target variable
-#' @param target String giving the name of the target variable
+#' @param target The name of the target variable
 #' @param binwidth The width of the bins. The default \code{NULL} gives
-#' standard \code{ggplot2::geom_histogram} but should be overridden with
+#' standard \code{geom_histogram} behaviour, but should be overridden with
 #' your own value
 #' @param interactiveplot If \code{FALSE}, the default, returns a ggplot
 #' visualisation of the histogram of the target variable. If \code{TRUE},
 #' returns an interactive plotly visualisation of the histogram.
 #' @param xlabel Provide a character to override the default label for the
 #' x axis
-#' @param ... Other arguments passed onto \code{ggplot2::geom_histogram}, such as
+#' @param ... Other arguments passed onto \code{geom_histogram}, such as
 #' \code{colour = "blue"} or \code{fill = NA}
 #' @param stat Defaults to \code{stat = "bin"} for numeric data. If categorical data
 #' is passed then the function will automatically change to \code{stat = "count"}
@@ -48,18 +48,18 @@ autoHistogramPlot <- function(df, target,
   }
 }
 
-#' Create a densiy estimate of a target variable
+#' Create a density estimate of a target variable
 #' @description Generates either a static \code{ggplot} or interactive
 #' \code{plotly} density estimate visualisation of the chosen target variable using
-#' \code{ggplot2::geom_density}.
+#' \code{geom_density}.
 #' @param df Dataframe that contains the target variable
-#' @param target String giving the name of the target variable
+#' @param target The name of the target variable
 #' @param interactiveplot If \code{FALSE}, the default, returns a \code{ggplot2}
 #' visualisation of the density estimate of the target variable. If
 #' \code{TRUE}, returns an interactive \code{plotly} visualisation of the histogram.
 #' @param xlabel Provide a character to override the default label for the
 #' x axis
-#' @param ... Other arguments passed onto \code{ggplot2::geom_density}, such as
+#' @param ... Other arguments passed onto \code{geom_density}, such as
 #' \code{colour = "red"} or \code{size = 2}
 #' @return A density estimate visualisation of the target variable from the
 #' provided data
