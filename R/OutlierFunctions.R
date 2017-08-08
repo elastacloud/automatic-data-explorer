@@ -48,7 +48,7 @@ OutlierMean <- function(outliers, x){
   mildOutliers <- outliers$mildOutliers[,2]
   extremeOutliers <- outliers$extremeOutliers[,2]
 
-  x <- na.omit(x)
+  x <- stats::na.omit(x)
   meanWithOutliers <- mean(x)
   meanWithoutMildOutliers <- mean(x[!x %in% mildOutliers])
   meanWithoutExtremeOutliers <- mean(x[!x %in% extremeOutliers])

@@ -7,7 +7,7 @@
 Outlier(x)
 }
 \arguments{
-\item{x, }{the variable of interest}
+\item{x}{the variable of interest}
 }
 \value{
 list of 6 objects (1:mild outliers, 2: extreme outliers, 3: mild outlier thresholds, 4: extreme outlier thresholds, 5: Percentage mild and extreme outleirs, 6: variable with and  without mild and extreme outliers)
