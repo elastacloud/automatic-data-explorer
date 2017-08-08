@@ -54,6 +54,7 @@ OptimalMinPoints <- function(df){
 #'@description This function will return a list of 2 objects (1: the original dataframe with an appended column identifying outliers (outliers==0), 2: A plot of the first two components of PCA, outliers identified in red)
 #'@param df, dataframe of numerical variables
 #'@return Returns a list of 2 objects (1: the original dataframe with an appended column identifying outliers (outliers==0), 2: A plot of the first two components of PCA, outliers identified in red)
+#'@export
 
 MultivariateOutlier <- function(df){
   #replace all NAs with the mean of the column

@@ -82,7 +82,7 @@ Outlier <- function(x){
   outlierPercentage <- OutlierPercentage(outlierValues,x)
   outlierMean <- OutlierMean(outlierValues, x)
 
-  Outliers <- list(outliers, outlierPercentage, outlierMean)
+  Outliers <- list(outlierValues, outlierPercentage, outlierMean)
   names(Outliers) <- c("outliers", "outlierPercentage", "outlierMean")
   return(Outliers)
 }
