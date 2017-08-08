@@ -13,7 +13,7 @@ SummaryStatsNum <- function(x) {
   }
 
   missingvalues <- sum(is.na(x))
-  x <- na.omit(x)
+  x <- stats::na.omit(x)
   mean <- mean(x)
   sd <- sd(x)
   se <- sd(x)/sqrt(length(x))
