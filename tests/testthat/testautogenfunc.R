@@ -51,5 +51,21 @@ test_that("Test insert functions work correctly", {
   expect_true(stringr::str_detect(fileread[4], as.character(Sys.Date())))
 
 
+  ## Test insertQuietChunk
+
+  createFile("Testing File Three") %>% insertYAML(title = "Testing", author = "Andrew") %>%
+    insertLibraries() %>% insertQuietChunk(expression(summary(mtcars), plot(mtcars$hp)))
+
+  filereadtwo <- readLines("Testing File Three.Rmd")
+
+  expect_false(identical(fileread, filereadtwo))
+
+  expect_equal(sum(stringr::str_detect(filereadtwo, "echo")), 3)
+  expect_equal(sum(stringr::str_detect(filereadtwo, "message")), 3)
+
   file.remove("Testing File Two.Rmd")
+  file.remove("Testing File Three.Rmd")
 })
+
+
+
