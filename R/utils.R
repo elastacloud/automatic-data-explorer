@@ -2,12 +2,17 @@
 
 # Generates the code chunks for .Rmd file
 writeChunk <- function(object, filename,
-                       chunktitle = NULL) {
+                       chunktitle = NULL,
+                       quiet = FALSE) {
+
+  topline <- ifelse(quiet,
+                    "```{r echo = F, message = F} ",
+                    "```{r}")
 
   if(is.null(chunktitle)) {
-    write(c("```{r}", object, "```"), file = filename, append = TRUE)
+    write(c(topline, object, "```"), file = filename, append = TRUE)
   } else {
-    write(c(chunktitle,"```{r}", object, "```"), file = filename, append = TRUE)
+    write(c(chunktitle,topline, object, "```"), file = filename, append = TRUE)
   }
 
 }
