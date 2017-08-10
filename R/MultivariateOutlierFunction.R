@@ -60,7 +60,7 @@ MultivariateOutlier <- function(df){
 
   for (i in seq_along(df)){
     if(!is.numeric(df[[i]])){
-      stop ("df is not a vector of type: numeric", call. = FALSE)
+      stop ("df has variables of non-numeric data type", call. = FALSE)
     }
 
   }
