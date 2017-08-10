@@ -59,7 +59,7 @@ OptimalMinPoints <- function(df){
 MultivariateOutlier <- function(df){
 
   for (i in seq_along(df)){
-    if(!is.numeric(i)){
+    if(!is.numeric(df[[i]])){
       stop ("df is not a vector of type: numeric", call. = FALSE)
     }
 
