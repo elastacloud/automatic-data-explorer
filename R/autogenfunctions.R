@@ -1,4 +1,6 @@
 
+## TODO: add an overwrite option so that doesn't just constantly append to
+# the end of the the rmd file
 
 #' @export
 autoMarkdown <- function(filename, rmdfile,
@@ -25,21 +27,24 @@ autoMarkdown <- function(filename, rmdfile,
 
   readfile <- readLines(filename)
 
-  idxs <- which(test == divider)
+  idxs <- which(readfile == divider)
   lenidx <- length(idxs)
 
   outp <- vector(mode = "list", length = lenidx - 1)
 
-  for (i in 1:lenidx) {
-    outp[[i]] <- test[(idxs[i] + 1) : (idxs[i + 1] - 1)]
+  for (i in 1:(lenidx - 1)) {
+    outp[[i]] <- readfile[(idxs[i] + 1) : (idxs[i + 1] - 1)]
   }
 
-  if(quiet) {
-    purrr::map2_chr(outp, ~ insertQuietChunk(rmdfile))
-  } else {
-    purrr::map2_chr(outp, ~ insertChunk(rmdfile))
-  }
+ # if(quiet) {
+#    purrr::map2_chr(outp, ~ insertQuietChunk(rmdfile, .))
+#  } else {
+#    purrr::map2_chr(outp, ~ insertChunk(rmdfile, .))
+#  }
 
+  purrr::map_chr(outp, ~ rmdtype(., rmdfile))
+
+  rmdfile
 }
 
 

@@ -40,3 +40,17 @@ edittemplate <- function(template, df, target, reporttitle, reportauthor) {
   template
 
 }
+
+
+rmdtype <- function(line, filename) {
+
+  ## TODO: This needs to be more robust
+
+  if(any(stringr::str_detect(line, "#'"))) {
+    write(stringr::str_replace(line, "#' *", ""), file = filename, append = T)
+  } else {
+    insertChunk(filename = filename, line)
+  }
+
+  filename
+}
