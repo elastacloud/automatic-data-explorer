@@ -10,7 +10,7 @@ insertChunk(filename, object, chunktitle = NULL)
 \item{filename}{Character giving the name of the R Markdown file that the
 chunk should be inserted into, minus the \code{.Rmd} extension}
 
-\item{object}{Can be any unquoted line of R code, i.e. a call to a function to insert a
+\item{object}{Can be any quoted or unquoted line of R code, i.e. a call to a function to insert a
 single line. To insert more than one line, pass as a vector of type \code{"expression"}.}
 
 \item{chunktitle}{Single or vector of character/s giving an optional markdown header that will be
@@ -37,6 +37,8 @@ with \code{\%>\%} is possible, by returning \code{filename} from the function.
 createFile("Mtcars") \%>\% insertYAML(title = "Test", author = "J. Bloggs") \%>\%
                          insertLibraries() \%>\%
                          insertChunk(summary(mtcars), title = "#Summary")
+
+                         insertChunk("summary(mtcars)", title = "#Summary") would also work
 
 ## Insert multiple chunks to existing file, with headers
 

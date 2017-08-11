@@ -8,7 +8,7 @@
 #' with \code{\%>\%} is possible, by returning \code{filename} from the function.
 #' @param filename Character giving the name of the R Markdown file that the
 #' chunk should be inserted into, minus the \code{.Rmd} extension
-#' @param object Can be any unquoted line of R code, i.e. a call to a function to insert a
+#' @param object Can be any quoted or unquoted line of R code, i.e. a call to a function to insert a
 #' single line. To insert more than one line, pass as a vector of type \code{"expression"}.
 #' @param chunktitle Single or vector of character/s giving an optional markdown header that will be
 #' included before the code chunk e.g. of the form \code{"# Header", "## Header",
@@ -26,6 +26,8 @@
 #' createFile("Mtcars") %>% insertYAML(title = "Test", author = "J. Bloggs") %>%
 #'                          insertLibraries() %>%
 #'                          insertChunk(summary(mtcars), title = "#Summary")
+#'
+#'                          insertChunk("summary(mtcars)", title = "#Summary") would also work
 #'
 #' ## Insert multiple chunks to existing file, with headers
 #'
@@ -46,6 +48,11 @@ insertChunk <- function(filename, object,
 
   if(any(!stringr::str_detect(chunktitle, "#"))) {
     warning("Titles without # will not render correctly")
+  }
+
+  if (is.character(object)) {
+    writeChunk(object, filename = filename, chunktitle = chunktitle)
+    return(filename)
   }
 
   if(is.expression(object)) {
@@ -75,7 +82,7 @@ insertChunk <- function(filename, object,
 #' of the code in the rendered document.
 #' @param filename Character giving the name of the R Markdown file that the
 #' chunk should be inserted into, minus the \code{.Rmd} extension
-#' @param object Can be any unquoted line of R code, i.e. a call to a function to insert a
+#' @param object Can be any quoted or unquoted line of R code, i.e. a call to a function to insert a
 #' single line. To insert more than one line, pass as a vector of type \code{"expression"}.
 #' @param chunktitle Single or vector of character/s giving an optional markdown header that will be
 #' included before the code chunk e.g. of the form \code{"# Header", "## Header",
@@ -93,6 +100,8 @@ insertChunk <- function(filename, object,
 #' createFile("Mtcars") %>% insertYAML(title = "Test", author = "J. Bloggs") %>%
 #'                          insertLibraries() %>%
 #'                          insertQuietChunk(summary(mtcars), title = "#Summary")
+#'
+#'                          insertChunk("summary(mtcars)", title = "#Summary") would also work
 #'
 #' ## Insert multiple chunks to existing file, with headers
 #'
@@ -113,6 +122,11 @@ insertQuietChunk <- function(filename, object,
 
   if(any(!stringr::str_detect(chunktitle, "#"))) {
     warning("Titles without # will not render correctly")
+  }
+
+  if (is.character(object)) {
+    writeChunk(object, filename = filename, chunktitle = chunktitle, quiet = TRUE)
+    return(filename)
   }
 
   if(is.expression(object)) {
