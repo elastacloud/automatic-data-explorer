@@ -63,7 +63,6 @@ insertLibraries <- function(filename,
 }
 
 
-
 #' Generate a named R Markdown file in a given directory
 #' @param filename Character giving the desired name of the R Markdown file, does
 #' not require the \code{.Rmd} extension

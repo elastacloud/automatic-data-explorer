@@ -1,4 +1,60 @@
 
+
+#' @export
+autoMarkdown <- function(filename, rmdfile,
+                         autocreatermd = FALSE, quiet = TRUE, render = FALSE,
+                         divider = "#.#") {
+
+  if (!file.exists(filename)) {
+    stop("`", filename, "` not found in current directory: ", getwd(), call. = FALSE)
+  }
+
+  if (!file.exists(rmdfile)) {
+#    if(autocreatermd) {  ## TODO: Work out how to deal with directory being provided with filename
+
+#      createFile(filename = stringr::str_replace(filename, ".R", ""))
+#      message("Auto-created .Rmd file called ", paste0(filename, ".Rmd"))
+
+#    } else {
+
+      stop("`", paste0(rmdfile, ".Rmd"), " not found in directory: ",
+           getwd(), call. = FALSE)
+
+#    }
+  }
+
+  readfile <- readLines(filename)
+
+  idxs <- which(test == divider)
+  lenidx <- length(idxs)
+
+  outp <- vector(mode = "list", length = lenidx - 1)
+
+  for (i in 1:lenidx) {
+    outp[[i]] <- test[(idxs[i] + 1) : (idxs[i + 1] - 1)]
+  }
+
+  if(quiet) {
+    purrr::map2_chr(outp, ~ insertQuietChunk(rmdfile))
+  } else {
+    purrr::map2_chr(outp, ~ insertChunk(rmdfile))
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #' Auto create R Markdown documents
 #' @description Automatically generate data exploration reports using
 #' R Markdown templates.
