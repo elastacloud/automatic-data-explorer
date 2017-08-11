@@ -52,15 +52,11 @@ SummaryStatsCat <- function(x){
 #' @return Data frame with relevant summary statistics
 
 VSummary <- function(x){
-  if (is.numeric(x)){
-    SummaryNum <- data.frame(SummaryStatsNum(x))
-  } else{
-    if (is.factor(x)){
-      SummaryCat <- data.frame(SummaryStatsCat(x))
-    } else {
-      stop("x is not a data type numeric or factor", call. = FALSE)
-    }
-  }
+  class <- class(x)
+  switch(class,
+         numeric = data.frame(SummaryStatsNum(x)),
+         factor = data.frame(SummaryStatsCat(x)),
+         stop("x is not a data type numeric or factor", call. = FALSE))
 }
 
 #' Summary function that takes in a data frame or vector of categorical or numerical varibales and provides summary statistics
