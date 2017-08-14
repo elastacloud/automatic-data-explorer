@@ -2,47 +2,36 @@
 ## TODO: add an overwrite option so that doesn't just constantly append to
 # the end of the the rmd file
 
+#' Automated generation of R Markdown documents from R Scripts
+#' @description Quickly and easily generate R Markdown documents from an R script.
+#' Combine any number of R scripts into a single R Markdown document.
+#' @param filename Either a single, or vector of, R script filenames in the order which you wish them
+#' to be written to R Markdown
+#' @param rmdfile The name of the rmdfile to write to, with the \code{.Rmd} extension
+#' @param quiet The default is \code{quiet = TRUE} which creates 'quiet' chunks. These code chunk will display
+#' the results of the code only
+#' @param render Automatically render the resulting R Markdown document
+#' @param overwrite If \code{overwrite = TRUE} the provided \code{.Rmd} file will be completely overwritten
+#' @param divider A unique character used to identify where the user wishes to split their script into separate
+#' code chunks and comment sections
 #' @export
-autoMarkdown <- function(filename, rmdfile,
-                         autocreatermd = FALSE, quiet = TRUE, render = FALSE,
-                         divider = "#.#") {
+autoMarkdown <- function(filename, rmdfile = NULL,
+                         quiet = TRUE, render = FALSE,
+                         overwrite = FALSE, divider = "#.#") {
 
-  if (!file.exists(filename)) {
-    stop("`", filename, "` not found in current directory: ", getwd(), call. = FALSE)
+  filesexist <- file.exists(filename)
+
+  if (!any(filesexist)) {
+    stop("Files not found in current directory: ", getwd(), call. = FALSE)
   }
 
-  if (!file.exists(rmdfile)) {
-#    if(autocreatermd) {  ## TODO: Work out how to deal with directory being provided with filename
-
-#      createFile(filename = stringr::str_replace(filename, ".R", ""))
-#      message("Auto-created .Rmd file called ", paste0(filename, ".Rmd"))
-
-#    } else {
-
-      stop("`", paste0(rmdfile, ".Rmd"), " not found in directory: ",
-           getwd(), call. = FALSE)
-
-#    }
+  if (is.null(rmdfile)) {
+      stop("Please provide a name for the .Rmd file", call. = FALSE)
   }
 
-  readfile <- readLines(filename)
-
-  idxs <- which(readfile == divider)
-  lenidx <- length(idxs)
-
-  outp <- vector(mode = "list", length = lenidx - 1)
-
-  for (i in 1:(lenidx - 1)) {
-    outp[[i]] <- readfile[(idxs[i] + 1) : (idxs[i + 1] - 1)]
+  for (i in seq_along(filename)) {
+    writermd(filename[i], rmdfile, quiet, divider)
   }
-
- # if(quiet) {
-#    purrr::map2_chr(outp, ~ insertQuietChunk(rmdfile, .))
-#  } else {
-#    purrr::map2_chr(outp, ~ insertChunk(rmdfile, .))
-#  }
-
-  purrr::map_chr(outp, ~ rmdtype(., rmdfile))
 
   rmdfile
 }
