@@ -66,6 +66,12 @@ writermd <- function(filename, rmdfile, quiet, divider) {
   readfile <- readLines(filename, warn = FALSE)
 
   idxs <- which(stringr::str_detect(readfile, divider))
+
+  if(!length(idxs)) {
+    stop("No occurrences of the divider '", divider,  "' were found in this R script",
+         call. = FALSE)
+  }
+
   lenidx <- length(idxs)
 
   outp <- vector(mode = "list", length = lenidx - 1)
