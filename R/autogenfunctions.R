@@ -1,4 +1,58 @@
 
+## TODO: add an overwrite option so that doesn't just constantly append to
+# the end of the the rmd file
+
+#' Automated generation of R Markdown documents from R Scripts
+#' @description Quickly and easily generate R Markdown documents from an R script.
+#' Combine any number of R scripts into a single R Markdown document.
+#' @param filename Either a single, or vector of, R script filenames in the order which you wish them
+#' to be written to R Markdown
+#' @param rmdfile The name of the rmdfile to write to, with the \code{.Rmd} extension
+#' @param quiet The default is \code{quiet = TRUE} which creates 'quiet' chunks. These code chunk will display
+#' the results of the code only
+#' @param render Automatically render the resulting R Markdown document
+#' @param overwrite If \code{overwrite = TRUE} the provided \code{.Rmd} file will be completely overwritten
+#' @param divider A unique character used to identify where the user wishes to split their script into separate
+#' code chunks and comment sections
+#' @export
+autoMarkdown <- function(filename, rmdfile = NULL,
+                         quiet = TRUE, render = FALSE,
+                         overwrite = FALSE, divider = "#.#") {
+
+  filesexist <- file.exists(filename)
+
+  if (!any(filesexist)) {
+    stop("Files not found in current directory: ", getwd(), call. = FALSE)
+  }
+
+  if (is.null(rmdfile)) {
+      stop("Please provide a name for the .Rmd file", call. = FALSE)
+  }
+
+  if (overwrite) {
+    write("", rmdfile, append = FALSE)
+  }
+
+  for (i in seq_along(filename)) {
+    writermd(filename[i], rmdfile, quiet, divider)
+  }
+
+  rmdfile
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #' Auto create R Markdown documents
 #' @description Automatically generate data exploration reports using
 #' R Markdown templates.

@@ -1,0 +1,396 @@
+```{r echo = F, message = F, warning = F} 
+
+library(forecast)
+library(tseries)
+library(AutoExploreR)
+library(readr)
+library(dplyr)
+library(ggplot2)
+
+```
+```{r echo = F, message = F, warning = F} 
+
+if (!exists("incidents")) {
+  incidents <- readr::read_csv("./Data/Incidents/csIncidents.csv", col_names = TRUE, col_types = cols(
+    INCDATE = col_date(format = "%d/%m/%Y"),
+    INCClockStart = col_datetime(format = "%d/%m/%Y %H:%M"),
+    TimeCallConnected = col_datetime(format = "%d/%m/%Y %H:%M"),
+    TimeCallAnswered = col_datetime(format = "%d/%m/%Y %H:%M"),
+    TimeStarted = col_datetime(format = "%d/%m/%Y %H:%M"),
+    TimeCallEnteredDispatchQ = col_datetime(format = "%d/%m/%Y %H:%M"),
+    TimeLocationConfirmed = col_datetime(format = "%d/%m/%Y %H:%M"),
+    TimeInMPDS = col_datetime(format = "%d/%m/%Y %H:%M"),
+    TimeChiefComplaintEstablished = col_datetime(format = "%d/%m/%Y %H:%M"),
+    TimeOfProblem = col_datetime(format = "%d/%m/%Y %H:%M"),
+    TimeDispatchCodeEstablished = col_datetime(format = "%d/%m/%Y %H:%M"),
+    TimeProQAExited = col_datetime(format = "%d/%m/%Y %H:%M"),
+    ShiftDate = col_date(format = "%d/%m/%Y")
+  ))
+}
+
+```
+
+# Incident forecasting
+
+The aim of this part of the investigation is to forecast the number of 999
+calls that will be received by the service. To achieve this numerous time
+series techniques have been implemented.
+
+The time series forecasting were split into four separate parts, with 
+increasing levels of perceived complexity. The four parts were
+
+1. Forecasting total daily calls
+2. Forecasing total daily calls by shift
+3. Forecasting total daily calls per division
+4. Forecasting total daily call outs per vehicle station
+
+## Data requirements
+
+Time-series models generally require that some assumptions are met. For example,
+that we have 'stationary' data. Stationary means that the data should have no trend, 
+constant variance and no seasonality. 
+
+
+The two plots below show 
+
+
+## Total daily calls
+
+This section will look at forecasting the number of 999 calls that will
+be received by the WMAS each day. Time series analysis techniques have
+been used to achieve this, making use of the R package 'forecast'.
+
+
+
+To forecast the number of daily calls we must have some data from which
+the forecasts can be generated. This was achieved using the csIncidents.csv
+data set. This was achieved by aggregating the data; grouping it by date and
+then simply counting the number of observations per date.
+
+```{r echo = F, message = F, warning = F} 
+
+callsperday <- incidents %>% group_by(INCDATE) %>% summarise(DailyCalls = n())
+head(callsperday, 10)
+
+```
+```{r echo = F, message = F, warning = F} 
+
+callsperday %>% ggplot(aes(INCDATE, DailyCalls)) + geom_line(colour = "dodgerblue", size = 1) + 
+  theme_bw() + xlab("Date") + ylab("Calls per day") + scale_y_continuous(limits = c(0,4000)) + 
+  scale_x_date(date_breaks = "1 month") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+```{r echo = F, message = F, warning = F} 
+
+```
+
+The total daily calls plot shows the possibility of a number of outliers in the data. Outliers
+could be erroneous data (in this case perhaps due to missing data), or they may
+be data points of particular interest, due to their difference from what is believed
+to be normal.
+
+We can use statistical methods to assess the likelihood of a given point being
+an outlier. In this case a univariate method has been used that identifies outliers
+based on how far outside the IQR of the data's distribution they are.
+
+```{r echo = F, message = F, warning = F} 
+
+outliers <- Outlier(callsperday$DailyCalls)
+
+callsperday[outliers$outliers$mildOutliers$Index, ]
+
+```
+
+Two outliers were identified; **29 September 2015** and **1 January 2016**.
+By looking at the daily calls plot and considering what could be particularly special
+about these dates, each outlier was treated differently. 1 January 2016 was ruled out as 
+being erroneous data. It seems perfectly reasonable to assume that the number of 999 calls
+on New Years Eve/Morning would be very high, due to celebrations/alcohol consumption and 
+everything that comes with them.
+
+However, the outlier on 29 September 2015 seems highly likely to be erroneous. One day where
+the number of calls is only 33% of the average is improbable. We could deal with this outlier
+by simply ignoring it, but for time-series forecasting we need data for every day; therefore,
+it should be replaced.
+
+The 'tsoutliers' function from the 'forecast' package provides suggest values for replacing
+outliers in time-series data. The suggested replacement for 29 September 2015 outlier was 3005, 
+which was used to replace the existing value. Note that there is a second replacement value; this
+is the suggested value to replace the 'outlier' on 1 January 2016, but was ignored.
+
+```{r echo = F, message = F, warning = F} 
+
+replacements <- tsoutliers(callsperday$DailyCalls)
+replacements$replacements
+callsperday[174, 2] <- replacements$replacements[1]
+
+```
+```{r echo = F, message = F, warning = F} 
+
+```
+
+It has been mentioned that our data must meet certain requirements for us to be able
+to use certain time-series forecasting techniques; for example, no trend (or constant mean).
+Luckily, even if we find that our data does not meet these requirements, there are certain
+data transformations that we can carry out that allow us to still implement our desired
+forecasting methods.
+
+We must also check that our data is actually forecastable, i.e. it is not just random (more
+familiarly known as white-noise). We can test that our data is not white-noise with a number
+of methods. Here we use the following: -
+* Box test
+* Acf plot
+
+**Box test**
+
+```{r echo = F, message = F, warning = F} 
+
+Box.test(callsperday$DailyCalls, lag = 24, type = "Lj", fitdf = 0)
+
+```
+
+The very low p-value shows that our data is almost definitely not white-noise. By looking
+at a plot of the auto correlations this can be confirmed.
+
+**Acf plot**
+
+```{r echo = F, message = F, warning = F} 
+
+ggAcf(callsperday$DailyCalls) + theme_bw() + ggtitle("Acf for daily calls data")
+
+```
+
+The black lines that extend past the dashed blue lines show that there is information in the data
+that can be used to build a forecasting model. 
+
+```{r echo = F, message = F, warning = F} 
+
+```
+
+A number of forecasting models were tested on the daily calls data. There are many
+to choose from, and it should never be assumed that the most complex will be the most
+accurate. The forecasting models tested for this investigation came from the following
+families:- 
+
+* Exponential smoothing models
+* ARIMA models
+* Neural Network models
+
+Machine learning techniques, such as train-test split, were also implemented to choose
+the model. These techniques mean that we can have much greater confidence in the reliability
+of our chosen forecasting model.
+
+**Train-test split**
+
+Train-test split is a technique that is frequently used in machine learning and it can be applied
+to time-series model selection as well. Using a train-test split allows us to test our model on real
+data and calculate multiple different accuracy statistics that will help us to choose our model.
+
+A typical split for train-test is to use 70% of data for training and the remaining 30% for testing.
+These splits are used here, as shown in the plot below. An important point about a train-test split is that the data that is used 
+for training should never be used to test the model, or the whole purpose of the technique is nullified.
+
+```{r echo = F, message = F, warning = F} 
+
+trainidxs <- seq(1, nrow(callsperday) * 0.7, 1)
+testidxs <- seq(max(trainidxs) + 1, nrow(callsperday), 1)
+train <- callsperday[trainidxs, ]
+test <- callsperday[testidxs, ]
+callsperday <- callsperday %>% mutate(ToT = factor(ifelse(rownames(callsperday) 
+                                                             %in% trainidxs, "train",
+                                                             "test"), levels = c("train", "test")))
+
+callsperday %>% ggplot(aes(INCDATE, DailyCalls, colour = ToT)) + geom_line(size = 1) +
+  theme_bw() + scale_y_continuous(limits = c(2000, 4000)) + scale_x_date(date_breaks = "1 month") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  scale_colour_manual(name = "Data Split", values = c("dodgerblue", "tomato1")) + xlab("Date") +
+  ylab("Calls per day")
+
+```
+```{r echo = F, message = F, warning = F} 
+
+```
+
+Some very simple forecasting models have been used to provide benchmarks against which the more complex
+models will be measured. These simple methods are: -
+
+* Naive - use the most recent observation for each forecast
+* Mean - use the mean of all observations as the forecast
+```{r echo = F, message = F, warning = F} 
+
+```
+
+**naive**
+
+```{r echo = F, message = F, warning = F} 
+
+fnaive <- naive(train$DailyCalls, h = 7)
+nacc <- accuracy(fnaive, test$DailyCalls)[, 1:5]
+nacc
+
+```
+
+**mean**
+ 
+```{r echo = F, message = F, warning = F} 
+
+fmean <- meanf(train$DailyCalls, h = 7)
+meanacc <- accuracy(fmean, test$DailyCalls)[, 1:5]
+meanacc
+
+```
+
+**simple exponential smoothing**
+
+```{r echo = F, message = F, warning = F} 
+
+fses <- ses(train$DailyCalls, h = 7)
+sesacc <- accuracy(fses, test$DailyCalls)[, 1:5]
+sesacc
+
+```
+
+The best performing of the benchmark models is **naive** which had the lowest of all
+measurements of error. Therefore, any more complex model should only be accepted if it
+has lower measures of error than
+
+* ME = `r nacc[2, 1]`
+* RMSE = `r nacc[2, 2]`
+* MAE = `r nacc[2, 3]`
+* MPE = `r nacc[2, 4]`
+* MAPE = `r nacc[2, 5]`
+
+
+ETS is from the exponential family of time-series models, it can essentially be seen as a
+generalised method for selecting the best exponential smoothing model for a given time-series.
+The R package `forecast` provides a function called `ets` that automatically chooses the best 
+exponential smoothing model for the provided time-series.
+
+We have spoken briefly about checking the residuals of a forecasting model. This is an essential
+part of the model selection process as it tells us if the calculated confidence intervals are
+reliable. The plots below and the results of the Ljung-Box test give the results of the residuals
+check on the best ETS model that was found for the daily calls data.
+
+```{r echo = F, message = F, warning = F} 
+
+etsmodel <- ets(train$DailyCalls)
+etsf <- forecast(etsmodel, h = 15)
+
+summary(etsmodel)
+checkresiduals(etsmodel)
+
+```
+
+The results show that the residuals are not white-noise and errors are therefore not random. The
+repurcussions of this are that the forecast confidence intervals can not be considered as being reliable.
+However we can still use the point (or mean) forecasts to assess the model. This is done below, by checking
+the various error statistics on the test data set.
+
+```{r echo = F, message = F, warning = F} 
+
+etsacc <- accuracy(etsf, test$DailyCalls)
+accuracies <- data.frame(naive = nacc[2, ], mean = meanacc[2, ] ,ses = sesacc[2, ], ets = etsacc[2, 1:5])
+accuracies
+```
+
+The accuracy test shows that the ETS model performs slightly better than the naive model on the test data set. 
+Further exploration of other time-series models was carried out. The next set of models that were investigated were
+ARIMA models.
+
+
+ARIMA models aim to describe the autocorrelations in the time-series data. Informally autocorrelations are the 
+similarity between observations as a function of the time lag between them. 
+
+ARIMA models depend on the data being stationary, with no trend and constant variance. Looking back at the time-series
+plot we see that the data appears to have an upward trend and changing variance.
+
+**Differncing and transformations**
+
+A trend can be removed by differencing the data, that is, rather than use the actual values, use the differences between them.
+The plot below shows the diffed daily calls data, with the upper trend clearly removed.
+
+```{r echo = F, message = F, warning = F} 
+
+diffdata <- data.frame(INCDATE = callsperday$INCDATE[2:nrow(callsperday)], diff = diff(callsperday$DailyCalls))
+diffdata %>% ggplot(aes(INCDATE, diff)) + geom_line(colour = "dodgerblue", size = 1) + 
+  theme_bw() + xlab("Date") + ylab("Diffed calls per day") + 
+  scale_x_date(date_breaks = "1 month") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+**ARIMA with no transformation**
+
+The first test of the ARIMA model will be with differenced data, but no transformation. The 'auto.arima' function
+in the 'forecast' package is made use of here. It will automatically select the best ARIMA model for the given time-series,
+automatically taking into account the need to difference the data.
+
+```{r echo = F, message = F, warning = F} 
+
+arimamodel1 <- auto.arima(train$DailyCalls)
+arimaf1 <- forecast(arimamodel1, h = 7)
+summary(arimamodel1)
+checkresiduals(arimamodel1)
+
+```
+```{r echo = F, message = F, warning = F} 
+
+arimaacc1 <- accuracy(arimaf1, test$DailyCalls)
+accuracies <- data.frame(accuracies, arima1 = arimaacc1[2, 1:5])
+accuracies
+
+```
+
+The ARIMA model has the best performance on the test data by a considerable margin (consider the Mean Absolute
+Error or MAE). Note that the residuals were also shown to be white-noise, meaning that we also have confidence in the
+reliability of the confidence intervals.
+
+The following plot shows the forecasts generated by the model (solid blue line), against the actual test values (solid red line).
+Also shown are the 80% (dark blue shaded region) and 95% (light blue shaded region) confidence intervals. 
+
+```{r echo = F, message = F, warning = F} 
+
+test$idxs <- testidxs
+autoplot.forecast(arimaf1) + geom_line(data = test, aes(x = idxs, y = DailyCalls), colour = "red", size = 1) +
+  scale_x_continuous(limits = c(232, 248)) + theme_bw()
+
+```
+
+**ARIMA with transformation**
+
+To achieve constant variance we can apply a Box-Cox transformation to the data. This is a family of transformations
+that includes logarithms and power transformations. The type of Box-Cox transformation used depends on a parameter 
+lambda; which can be estimated using the 'BoxCox.lambda' function in the 'forecast' package.
+
+```{r echo = F, message = F, warning = F} 
+
+lambda <- BoxCox.lambda(train$DailyCalls)
+
+```
+
+A value of **lambda = `r lambda`** is suggested, which can be passed onto the 'auto.arima' function as an argument.
+
+arimamodel2  <- auto.arima(train$DailyCalls, lambda = 0.089)
+arimaf2 <- forecast(arimamodel2, h = 7)
+summary(arimamodel2)
+checkresiduals(arimamodel2)
+
+```{r echo = F, message = F, warning = F} 
+
+arimaacc2 <- accuracy(arimaf2, test$DailyCalls)
+accuracies <- data.frame(accuracies, arima2 = arimaacc2[2, 1:5])
+accuracies
+
+```
+
+The ARIMA model with transformed data performs very slightly better than the original ARIMA model on a few metrics and
+slightly worse on others. We also observe that the confidence intervals are also wider than the original ARIMA models,
+providing less certainty in our forecasts.
+
+The original ARIMA(3, 1, 1) model is the best performing on the test data.
+
+```{r echo = F, message = F, warning = F} 
+
+autoplot.forecast(arimaf2) + geom_line(data = test, aes(x = idxs, y = DailyCalls), colour = "red", size = 1) +
+  scale_x_continuous(limits = c(232, 248)) + theme_bw()
+
+```

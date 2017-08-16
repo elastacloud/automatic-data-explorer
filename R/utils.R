@@ -6,7 +6,7 @@ writeChunk <- function(object, filename,
                        quiet = FALSE) {
 
   topline <- ifelse(quiet,
-                    "```{r echo = F, message = F} ",
+                    "```{r echo = F, message = F, warning = F} ",
                     "```{r}")
 
   if(is.null(chunktitle)) {
@@ -38,5 +38,48 @@ edittemplate <- function(template, df, target, reporttitle, reportauthor) {
   template <- gsub("dataName", df, template)
 
   template
+
+}
+
+
+rmdtype <- function(line, filename, quiet = TRUE) {
+
+  ## TODO: This needs to be more robust
+
+  if(any(stringr::str_detect(line, "#'"))) {
+    write(stringr::str_replace(line, "#' *", ""), file = filename, append = T)
+  } else {
+    if (quiet) {
+      insertQuietChunk(filename = filename, line)
+    } else {
+      insertChunk(filename = filename, line)
+    }
+
+  }
+
+  filename
+}
+
+
+writermd <- function(filename, rmdfile, quiet, divider) {
+
+  readfile <- readLines(filename, warn = FALSE)
+
+  idxs <- which(stringr::str_detect(readfile, divider))
+
+  if(!length(idxs)) {
+    stop("No occurrences of the divider '", divider,  "' were found in this R script",
+         call. = FALSE)
+  }
+
+  lenidx <- length(idxs)
+
+  outp <- vector(mode = "list", length = lenidx - 1)
+
+  for (i in 1:(lenidx - 1)) {
+    outp[[i]] <- readfile[(idxs[i] + 1) : (idxs[i + 1] - 1)]
+  }
+
+  purrr::map_chr(outp, ~ rmdtype(., rmdfile, quiet))
 
 }
