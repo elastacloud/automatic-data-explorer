@@ -29,6 +29,10 @@ autoMarkdown <- function(filename, rmdfile = NULL,
       stop("Please provide a name for the .Rmd file", call. = FALSE)
   }
 
+  if (overwrite) {
+    write("", rmdfile, append = FALSE)
+  }
+
   for (i in seq_along(filename)) {
     writermd(filename[i], rmdfile, quiet, divider)
   }

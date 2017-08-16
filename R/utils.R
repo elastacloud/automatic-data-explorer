@@ -65,7 +65,7 @@ writermd <- function(filename, rmdfile, quiet, divider) {
 
   readfile <- readLines(filename, warn = FALSE)
 
-  idxs <- which(readfile == divider)
+  idxs <- which(stringr::str_detect(readfile, divider))
   lenidx <- length(idxs)
 
   outp <- vector(mode = "list", length = lenidx - 1)
