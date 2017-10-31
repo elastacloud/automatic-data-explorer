@@ -17,7 +17,7 @@
 #' @export
 autoMarkdown <- function(filename, rmdfile = NULL,
                          quiet = TRUE, render = FALSE,
-                         overwrite = FALSE, divider = "#.#") {
+                         overwrite = FALSE, divider = "#'#") {
 
   filesexist <- file.exists(filename)
 

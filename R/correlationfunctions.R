@@ -4,7 +4,7 @@
 #' variable and all other variables in the same data frame. Uses \code{cor}
 #' to calculate correlations.
 #' @param df Dataframe containing all variables
-#' @param target String giving the name of the target variable
+#' @param target Name of the target variable
 #' @param N Default \code{NULL} will return all correlations. Change to e.g. \code{N = 5}
 #' to return only the 5 highest absolute correlations
 #' @param use Same as \code{use} in the \code{cor} function
@@ -15,6 +15,8 @@ targetCorrelations <- function(df, target,
                                N = NULL,
                                use = "everything",
                                method = c("pearson", "kendall", "spearman")) {
+
+  target <- lazyeval::expr_text(target)
 
   # catch non-numeric `target` error
   if (!is.numeric(df[[target]])) {
@@ -31,13 +33,14 @@ targetCorrelations <- function(df, target,
   corrs <- corrs[order(abs(corrs), decreasing = TRUE)]
 
   if (is.null(N)) {
-    corrs  # Return all ordered correlations
+    tibble::data_frame(names = names(corrs), corrs)  # Return all ordered correlations
   } else {
     if (N > length(corrs)) {
       warning("N is greater than number of correlations")
-      corrs
+      tibble::data_frame(names = names(corrs), corrs)
     } else {
-      corrs[1:N]  # Return the top N variables with highest absolute correlation
+      corrs <- tibble::data_frame(names = names(corrs), corrs)
+      corrs[1:N, ]  # Return the top N variables with highest absolute correlation
     }
   }
 }
