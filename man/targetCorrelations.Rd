@@ -10,7 +10,7 @@ targetCorrelations(df, target, N = NULL, use = "everything",
 \arguments{
 \item{df}{Dataframe containing all variables}
 
-\item{target}{String giving the name of the target variable}
+\item{target}{Name of the target variable}
 
 \item{N}{Default \code{NULL} will return all correlations. Change to e.g. \code{N = 5}
 to return only the 5 highest absolute correlations}

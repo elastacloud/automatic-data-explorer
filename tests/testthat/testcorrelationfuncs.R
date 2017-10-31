@@ -15,13 +15,13 @@ test_that("Test the target correlation function behaves correctly",{
 
   expect_warning(targetCorrelations(testdata, A, N = 10))
 
-  expect_that(length(targetCorrelations(testdata, B, N = 1)), equals(1))
+  expect_that(nrow(targetCorrelations(testdata, B, N = 1)), equals(1))
 
   corrs <- targetCorrelations(testdata, A)
 
-  expect_that(length(corrs), equals(2))
+  expect_that(nrow(corrs), equals(2))
 
-  expect_true(abs(corrs[1]) >= abs(corrs[2]))
+  expect_true(abs(corrs[1,2]) >= abs(corrs[2,2]))
 
 })
 

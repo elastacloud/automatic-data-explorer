@@ -31,4 +31,6 @@ Imports: purrr,
     psych,
     fpc,
     dplyr,
-    reshape2
+    reshape2,
+    lazyeval,
+    tibble

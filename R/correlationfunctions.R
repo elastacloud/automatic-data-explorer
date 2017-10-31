@@ -33,13 +33,14 @@ targetCorrelations <- function(df, target,
   corrs <- corrs[order(abs(corrs), decreasing = TRUE)]
 
   if (is.null(N)) {
-    corrs  # Return all ordered correlations
+    tibble::data_frame(names = names(corrs), corrs)  # Return all ordered correlations
   } else {
     if (N > length(corrs)) {
       warning("N is greater than number of correlations")
-      corrs
+      tibble::data_frame(names = names(corrs), corrs)
     } else {
-      corrs[1:N]  # Return the top N variables with highest absolute correlation
+      corrs <- tibble::data_frame(names = names(corrs), corrs)
+      corrs[1:N, ]  # Return the top N variables with highest absolute correlation
     }
   }
 }

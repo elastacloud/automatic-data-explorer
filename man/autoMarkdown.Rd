@@ -5,7 +5,7 @@
 \title{Automated generation of R Markdown documents from R Scripts}
 \usage{
 autoMarkdown(filename, rmdfile = NULL, quiet = TRUE, render = FALSE,
-  overwrite = FALSE, divider = "#.#")
+  overwrite = FALSE, divider = "#'#")
 }
 \arguments{
 \item{filename}{Either a single, or vector of, R script filenames in the order which you wish them
