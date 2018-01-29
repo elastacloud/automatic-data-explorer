@@ -4,7 +4,7 @@
 #' mean, SD, SE, median, min, max, range, skew and kurtosis) for a specified numerical variable
 #' @param x = variable
 #' @return vector with summary statistics
-#' @export
+
 
 SummaryStatsNum <- function(x) {
 
@@ -20,7 +20,7 @@ SummaryStatsNum <- function(x) {
   median <- median(x)
   min <- min(x)
   max <- max(x)
-  range <- range(x)
+  range <- max -  min
   skew <- psych::skew(x)
   kurtosis <- psych::kurtosi(x)
 
@@ -32,7 +32,7 @@ SummaryStatsNum <- function(x) {
 #' @description This function will return summary statistics (counts, percentage, missing values) for a specified categorical variable
 #' @param x = variable
 #' @return Data frame with summary statistics (count and percentage) for each level of the categorical variable
-#' @export
+
 
 SummaryStatsCat <- function(x){
 
@@ -44,4 +44,31 @@ SummaryStatsCat <- function(x){
   percentage <- (count/sum) * 100
 
   data.frame(count, percentage)
+}
+
+#' Summary function for both categorical and numerical variables
+#' @description This function will return relevant summary statistics dependent on the data type of the variable inputted
+#' @param x A variable of type categorical or numerical
+#' @return Data frame with relevant summary statistics
+
+VSummary <- function(x){
+  class <- class(x)
+  switch(class,
+         numeric = data.frame(SummaryStatsNum(x)),
+         factor = data.frame(SummaryStatsCat(x)),
+         stop("x is not a data type numeric or factor", call. = FALSE))
+}
+
+#' Summary function that takes in a data frame or vector of categorical or numerical varibales and provides summary statistics
+#' @description This function will provide relevant summary statistics for inputted data frames or vectors of categorrical or numerical variables
+#' @param object can be a data frame or vector
+#' @return Data frame with relevant summary statistics
+#' @export
+
+Summary <- function(object){
+  if (class(object) == "data.frame"){
+    lapply(object, VSummary)
+  } else{
+    data.frame(VSummary(object))
+  }
 }

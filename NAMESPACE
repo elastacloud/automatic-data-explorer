@@ -2,8 +2,7 @@
 
 export(MultivariateOutlier)
 export(Outlier)
-export(SummaryStatsCat)
-export(SummaryStatsNum)
+export(Summary)
 export(autoCorrelationPlot)
 export(autoDensityPlot)
 export(autoDensityPlot_)
