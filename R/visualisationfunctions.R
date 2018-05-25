@@ -18,6 +18,13 @@
 #' @param stat Defaults to \code{stat = "bin"} for numeric data. If categorical data
 #' is passed then the function will automatically change to \code{stat = "count"}
 #' @return A histogram of the target variable from the provided data
+#' @examples
+#' mtcars %>%
+#'   autoHistogramPlot(mpg, xlabel = "Miles per gallon")
+#'
+#' # Can customise plot using usual ggplot2 aesthetics
+#' mtcars %>%
+#'   autoHistogramPlot(mpg, col = "black", fill = "grey")
 #' @export
 #' @importFrom ggplot2 ggplot aes_string geom_histogram xlab
 autoHistogramPlot <- function(df, target,
@@ -63,6 +70,14 @@ autoHistogramPlot <- function(df, target,
 #' \code{colour = "red"} or \code{size = 2}
 #' @return A density estimate visualisation of the target variable from the
 #' provided data
+#' @examples
+#' mtcars %>%
+#'   autoDensityPlot(hp)
+#'
+#' # Can customise plot using usual ggplot2 aesthetics
+#' mtcars %>%
+#'   autoDensityPlot(hp, fill = "blue", alpha = 0.5)
+#'
 #' @export
 #' @importFrom ggplot2 ggplot aes_string geom_density xlab
 autoDensityPlot <- function(df, target,

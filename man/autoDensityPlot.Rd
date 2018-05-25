@@ -30,3 +30,12 @@ Generates either a static \code{ggplot} or interactive
 \code{plotly} density estimate visualisation of the chosen target variable using
 \code{geom_density}.
 }
+\examples{
+mtcars \%>\%
+  autoDensityPlot(hp)
+
+# Can customise plot using usual ggplot2 aesthetics
+mtcars \%>\%
+  autoDensityPlot(hp, fill = "blue", alpha = 0.5)
+
+}

@@ -36,3 +36,11 @@ A histogram of the target variable from the provided data
 Generates either a static \code{ggplot} or interactive
 \code{plotly} histogram visualisation of the chosen target variable.
 }
+\examples{
+mtcars \%>\%
+  autoHistogramPlot(mpg, xlabel = "Miles per gallon")
+
+# Can customise plot using usual ggplot2 aesthetics
+mtcars \%>\%
+  autoHistogramPlot(mpg, col = "black", fill = "grey")
+}
