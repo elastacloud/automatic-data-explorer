@@ -92,10 +92,12 @@ autoDensityPlot <- function(df, target,
 
 
 #' Plot a correlation matrix
-#' @description Given a correlation matrix this function will generate a
+#' @description Given a dataframe this function will generate a
 #' correlation plot. Uses \code{corrplot::corrplot} for non-interactive plotting
 #' and \code{heatmaply::heatmaply} for interactive plotting
-#' @param m Correlation matrix to plot
+#' @param df Dataframe to calculate multivariate correlations from
+#' @param use Same as \code{use} in the \code{cor} function.
+#' @param method Same as \code{method} in the \code{cor} function.
 #' @param cluster If \code{cluster = TRUE} then the correlation matrix will be
 #' reordered using the \code{"hclust"} method in \code{corrplot::corrMatOrder}
 #' @param interactiveplot If \code{FALSE}, the default, returns a \code{corrplot}
@@ -103,8 +105,15 @@ autoDensityPlot <- function(df, target,
 #' \code{heatmaply} visualisation of the correlation matrix
 #' @export
 #' @return Correlation plot of the provided correlation matrix
-autoCorrelationPlot <- function(m,
+autoCorrelationPlot <- function(df,
+                                use = "everything",
+                                method = c("pearson", "kendall", "spearman"),
                                 cluster = FALSE, interactiveplot = FALSE) {
+
+  # TODO: Add error handling for df
+  # TODO: Allow factors???
+
+  m <- multivariateCorrelation(df, output = "matrix", use = use, method = method)
 
   # Check that m is a matrix
   if (!is.matrix(m)) {

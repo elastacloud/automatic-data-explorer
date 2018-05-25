@@ -4,10 +4,15 @@
 \alias{autoCorrelationPlot}
 \title{Plot a correlation matrix}
 \usage{
-autoCorrelationPlot(m, cluster = FALSE, interactiveplot = FALSE)
+autoCorrelationPlot(df, use = "everything", method = c("pearson", "kendall",
+  "spearman"), cluster = FALSE, interactiveplot = FALSE)
 }
 \arguments{
-\item{m}{Correlation matrix to plot}
+\item{df}{Dataframe to calculate multivariate correlations from}
+
+\item{use}{Same as \code{use} in the \code{cor} function.}
+
+\item{method}{Same as \code{method} in the \code{cor} function.}
 
 \item{cluster}{If \code{cluster = TRUE} then the correlation matrix will be
 reordered using the \code{"hclust"} method in \code{corrplot::corrMatOrder}}
@@ -20,7 +25,7 @@ visualisation of the correlation matrix. If \code{TRUE}, returns a interactive
 Correlation plot of the provided correlation matrix
 }
 \description{
-Given a correlation matrix this function will generate a
+Given a dataframe this function will generate a
 correlation plot. Uses \code{corrplot::corrplot} for non-interactive plotting
 and \code{heatmaply::heatmaply} for interactive plotting
 }
